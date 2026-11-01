@@ -1,0 +1,334 @@
+<!--
+  The Burden of Truth · 15-minute talk · slide text
+  ================================================
+  Same format as the ITAO 40515 web decks. A block between two lines of three dashes holds the slide's
+  settings, then the slide text, "Click N:" captions, and speaker notes after a line that says "Notes:".
+  Keys ending in [] repeat. Fields inside a repeated key are separated by " | ". \n is a line break.
+  Never put a line of three dashes inside a slide's text.
+  Components (the animated figures) are in js/components/talk.js; "component:" names one.
+  Save this file and the open deck reloads (when started with start-deck). The "Click N:" lines are the
+  italic caption at the bottom of the slide; the speech is in Notes (press P for the presenter window).
+-->
+
+---
+id: title
+layout: title
+kicker: A theory of defensibility for AI audits
+title: The Burden\nof Truth
+subtitle: What an audit can still establish when there is no right answer to check against
+meta: **Cam Kormylo** · Heng Xu · Nicholas Berente\nMendoza College of Business · University of Notre Dame
+component: TitleStamps
+compfull: 1
+---
+Notes:
+**0:00.** Let the stamps run for a beat. "Every audit passed" is the first line of the talk and the last.
+
+---
+id: audited
+kicker: The most audited AI system in the world
+title: Every audit **passed**.
+bloom: amber
+component: AuditStack
+check[]: Quarterly enforcement metrics | Prevalence, proactive rate, and since 2025 a count of "mistakes"
+check[]: Independent audit under the EU Digital Services Act | EY, 2024. 54 sub-articles. Over 90% fully compliant. No adverse conclusions.
+check[]: A standing review body | The Oversight Board. Twenty-plus members. Binding on individual posts.
+harm[]: 2015 · Myanmar | Two Burmese-speaking reviewers for a country that ran on Facebook. The UN later said the platform's role bore the hallmarks of genocide.
+harm[]: 2020 · Ethiopia | Five years later, with Myanmar as evidence, no hate-speech classifier in Amharic or Oromo as a civil war began.
+source: Meta, "Meta's Progress Implementing the Digital Services Act," Nov 2024 · Reuters, "Why Facebook is losing the war on hate speech in Myanmar," Aug 2018 · Facebook Files (CNN, WSJ), Oct 2021
+---
+Click 0: Meta's content moderation is checked more than any other AI system in operation.
+Click 1: It reports its own numbers every quarter.
+Click 2: It is audited by a Big Four firm against European law.
+Click 3: It has a supreme court for posts.
+Click 4: And in 2015 the whole of Myanmar was reviewed by two people.
+Click 5: Five years later, the same thing in Ethiopia, with Myanmar on the record as evidence.
+Notes:
+**0:10. About 90 seconds.** Build the stack slowly. The three checks are real and I am not mocking them; they are exactly what a well-run audit regime looks like. Then the two harms. Do not explain yet. End on: "Every one of those audits passed, before and after. I want to talk about what they were checking."
+
+---
+id: claim
+kicker: The claim
+title: An audit can ask one of two questions
+bloom: teal
+component: TwoQuestions
+left: Is it correct? | Verification | Compare the system's outputs to a standard fixed in advance. The logic IS audit inherited from financial audit.
+right: Was reliance justified? | Defensibility | Examine the organization's judgment to depend on the system, given the evidence, the uncertainty, the people responsible, and the stakes.
+---
+Click 0: Sixty years of IS audit have asked the first question.
+Click 1: When there is no standard to check against, the second question is the one that can still be answered.
+Click 2: The talk: why the first question stops working, what the second one requires, and two audits of one deployment.
+Notes:
+**1:40. About 50 seconds.** State the claim plainly. "For a large class of generative AI deployments, including content moderation at scale, there is no correct output to verify against. The audit should ask instead whether the organization was justified in relying on the system. That is the standard we develop, and we call it defensibility." Then the signpost.
+
+---
+id: pillars
+kicker: Part 1 · The problem
+title: Verification rests on four requirements
+bloom: amber
+component: FourPillars
+pillar[]: Assertions | that can be true or false
+pillar[]: Evidence | that confirms or disconfirms them
+pillar[]: Determinate states | a subject matter with facts to compare against
+pillar[]: Criteria | established in advance
+example[]: A ledger reconciles or it doesn't.
+example[]: A transaction meets its specification or it doesn't.
+example[]: A known abuse image hash-matches or it doesn't.
+source: Committee on Basic Auditing Concepts (Silvoso, 1972) · Power (1997) · Kroll et al. (2017), Raji et al. (2020), NIST AI RMF (2023), EU AI Act (2024)
+---
+Click 0: The 1972 definition of auditing presupposes four things.
+Click 1: Assertions that can be evaluated for truth.
+Click 2: Evidence capable of confirming or disconfirming them.
+Click 3: A subject matter with determinate states, so evidence can connect to assertion.
+Click 4: Criteria established before the audit begins.
+Click 5: Where those hold, verification works, and some moderation is like this.
+Notes:
+**2:30. About 45 seconds.** Fast. The point is that verification is a fine logic with preconditions, not a mistake. Every AI audit framework of the last decade widened what gets checked without changing the logic of checking. Hash-matching known abuse imagery is the moderation case where all four hold, and it works.
+
+---
+id: indeterminacy
+kicker: Part 1 · The problem
+title: A post is not a ledger entry
+bloom: signal
+component: Annotators
+post: "Clean the cockroaches."
+postmeta: Translated from Amharic. Posted during the Tigray war, 2020 to 2022.
+reader[]: Annotator 1 | Remove | Dehumanizing term for Tigrayans in this dialect
+reader[]: Annotator 2 | Keep | Idiom. No target named. Could be about pests.
+reader[]: Annotator 3 | Remove | Context: posted in a militia group
+reader[]: Annotator 4 | Unsure | Depends who is reading and when
+source: DAIR Institute study of moderation during the Tigray war (2025) · Lebovitz, Levina & Lifshitz-Assaf, MISQ (2021) · Goodman et al., JAMA (2024)
+---
+Click 0: One post from the Tigray war, as a study of moderation in that conflict translated it.
+Click 1: Four fluent annotators. Three answers.
+Click 2: There is no fact of the matter for a classifier to be checked against. The "ground truth" is other people's judgment.
+Click 3: Take away determinate states and the other three requirements fall with it. We call this epistemic indeterminacy.
+Notes:
+**3:15. About 75 seconds.** This is the slide that earns the rest. The study's authors found that dialect knowledge, including slang, was crucial, and that this post was not flagged by all annotators. Whether a post is incitement is settled by readers in a place and a moment. Lebovitz and colleagues found the same thing in hospital ML: the accuracy figures hid the uncertainty inside the labels. Then the general statement: epistemic indeterminacy is when there is no answer, fixed independently of the context of use, against which the output could be checked. It is not a defect of the model. It is a property of the task. Discharge summaries, legal summaries, translations, code against an unspecified requirement all share it.
+
+---
+id: reflexes
+kicker: Part 1 · The problem
+title: Two reflexes, and why each makes it worse
+bloom: signal
+component: Reflexes
+measure: Measure it | "Our LLMs make 13% fewer errors than human reviewers." | Fewer errors measured against what? Against the human labels. The contested thing is the yardstick.
+wait: Wait for it to improve | 97.4% of hate-speech removals on Instagram were automated in Q1 2025. | The better the system, the fewer humans ever see the rare failure in the rare language. Showing a 1-in-1,000 error rate takes about 3,000 clean cases.
+source: Financial Times reporting on Meta's LLM moderation (2026) · Meta Q1 2025 Integrity Report via Wired · Kalra & Paddock (2016) · Bainbridge (1983) · Parasuraman & Manzey (2010)
+---
+Click 0: Two standard responses to indeterminacy.
+Click 1: First: treat it as a measurement problem.
+Click 2: But the error rate is computed against labels, and the labels are the judgment in dispute. Knight would call this uncertainty wearing the clothes of risk.
+Click 3: Second: wait. The systems are improving.
+Click 4: Improvement makes verification harder. Rare errors need huge samples to detect, and the humans who should notice them attend less to a system that is usually right.
+Click 5: So verification costs more and catches less at exactly the moment the organization relies on it more.
+Notes:
+**4:30. About 60 seconds.** The 13% figure is Meta's own, reported to the FT. Do not dispute it. Ask what it is measured against. The 97.4% figure is from Meta's Q1 2025 integrity report. Then the arithmetic: to show with 95% confidence that an error occurs less than once in a hundred cases you need about 300 consecutive clean cases; for one in a thousand, about 3,000. Kalra and Paddock ran this for autonomous vehicles. This is Proposition 2 in the paper: high reliability should prompt closer scrutiny of the justification, in exactly the setting where audit practice relaxes.
+
+---
+id: ritual
+kicker: Part 1 · The problem
+title: What verification produces when it cannot verify
+bloom: amber
+component: CopyPaste
+statute: Art. 34(1). Providers of very large online platforms shall diligently identify, analyse and assess any systemic risks in the Union stemming from the design or functioning of their service…
+quote[]: "EY will not provide … opinions of legal interpretation." | Service agreement, audit report appendix
+quote[]: "Making interpretations, defining ambiguous terms" is Meta's responsibility. | EY assurance report
+quote[]: "Some of these kinds of self-assessments have become box-checking exercises that miss significant risks." | Former Meta executive, to NPR, 2025
+source: DSA Observatory, "Shortcomings of the first DSA audits," June 2025 · NPR, May 31 2025 · Power, The Audit Society (1997) · Bovens (2007) · Edelman (1992)
+---
+Click 0: The DSA audit report, as the DSA Observatory read it.
+Click 1: The audit criteria are the statute, copied.
+Click 2: The conclusion: fully compliant.
+Click 3: Who decides what the ambiguous terms mean? The auditee.
+Click 4: Power called this a ritual of verification. No bad faith is needed. A forum that cannot judge reliability judges the paperwork, and organizations rationally produce paperwork.
+Notes:
+**5:30. About 60 seconds.** The copy animation is the argument. The auditor pasted the legal text as its criteria and disclaimed interpretation; Meta defined the terms; the conclusion followed. The Commission then opened proceedings anyway. Bovens: accountability needs a forum able to evaluate the account. When the forum cannot evaluate reliability, it evaluates completeness. The former executive's line is from NPR's reporting on Meta automating its own risk reviews, which we come back to.
+
+---
+id: pivot
+kicker: Part 2 · The solution
+title: Audit the judgment to rely, not the output
+bloom: teal
+component: ObjectShift
+output: The post | Remove or keep?
+judgment: The decision to rely | on automated detection, at full scale, in Amharic, during a civil war
+part[]: Evidence | What did they know?
+part[]: Actors | Who can answer for it?
+part[]: Threshold | How sure did they have to be?
+simon: "Probably the strictest standard we can generally satisfy with real-world problems of this complexity."
+source: Simon, The Sciences of the Artificial (1996, p. 146) · Toulmin (2003) · Rudner (1953) · Douglas (2009) · Bovens (2007)
+---
+Click 0: Every check rests on prior choices: what to check, against what, how much is enough.
+Click 1: For a hash database those choices are a specification. For Amharic in a war they are judgments by particular people. That is where responsibility lives, and it is what an auditor can examine even when correctness is unavailable.
+Click 2: A justification has three constituents, and each replaces one of verification's requirements.
+Click 3: Simon, on defensibility as a standard.
+Notes:
+**6:30. About 60 seconds.** The move: shift the audit object from the output to the justification for relying on it. The reasoning behind a decision is fixed at the time it was made and can be reconstructed from the artifacts (Simon's procedural rationality, Baron and Hershey on outcome bias). Verification stays, as one input to the justification. Then the three constituents. Each is a condition in the paper: evidential sufficiency, epistemic answerability, proportional threshold. Simon's line pre-empts "isn't this a weak standard."
+
+---
+id: evidence
+kicker: Condition 1 · Evidential sufficiency
+title: The evidence existed. It did not **govern**.
+bloom: teal
+component: EvidenceTimeline
+event[]: Jun 2020 | Internal audit | "Significant gaps in our coverage (especially in Myanmar & Ethiopia) … our current signals may be inadequate." No classifier for Amharic or Oromo.
+event[]: Nov 2020 | War begins | Tigray conflict starts. Reliance on automated detection continues at full scale.
+event[]: Mar 2021 | Internal report | Headline in bold: "Current mitigation strategies are not enough."
+event[]: 2021 | Internal roadmap | Ethiopia rated in "dire" risk of violence. Own capacity rated 0 out of 3.
+test[]: Relevant to this deployment | yes
+test[]: Read in light of its limits | yes
+test[]: Affected the decision | no
+source: Facebook Files via CNN and WSJ, Oct 2021 · Wired, Dec 2022 (Kenyan lawsuit filings) · Council on Foreign Relations, 2022
+---
+Click 0: The principle: evidence must bear on the deployment actually made. Chosen for relevance, read with its limits, and it changed the decision.
+Click 1: Meta's own teams produced the evidence.
+Click 2: The war began. The line of reliance did not move.
+Click 3: Nine months later, in bold.
+Click 4: By the roadmap's own scale, zero.
+Click 5: Two of three clauses met. Verification never tests the third, because the third is about the judgment.
+Notes:
+**7:30. About 60 seconds.** This is the strongest fact pattern in the talk and it needs no adjectives. Read the quotes. The flat line is the point: "full-scale reliance" never moves while the evidence piles up under it. Characteristic failure in the paper is "documentation without inquiry." Here it is inquiry without consequence, the same defect from the other side. Fit, not volume.
+
+---
+id: answerability
+kicker: Condition 2 · Epistemic answerability
+title: Who can answer for the **whole**?
+bloom: lilac
+component: ManyHands
+hand[]: Policy team | explains the policy
+hand[]: Classifier team | explains the languages it covers
+hand[]: Nairobi review hub | explains the queue
+hand[]: Two fact-check partners | five people, four languages
+hand[]: Regional operations | explains the escalation path
+hand[]: Headquarters | explains the strategy
+center: The decision to run at full scale in a civil war with capacity rated zero
+ask: Oversight Board, Dec 2021 | Recommended an independent human-rights assessment of Meta's role in Ethiopia
+answer: Meta, Jan 2022 | Would "assess the feasibility" of commissioning one
+source: Oversight Board decision 2021-014-FB-UA · Reuters, Jan 2022 · Nissenbaum (1996) · Bovens (2007) · Lerner & Tetlock (1999)
+---
+Click 0: The principle: identifiable actors who could have shaped, restricted, or halted the deployment can defend the judgment as a whole, including what would have changed it.
+Click 1: Every party can explain its own part.
+Click 2: Nobody is positioned to answer for the center. Nissenbaum called this the problem of many hands.
+Click 3: The forum asked.
+Click 4: The organization answered with a feasibility study. That is nominal responsibility without the capacity to give an account.
+Notes:
+**8:30. About 60 seconds.** A signature chain is formal accountability; answerability is being able to say what the evidence showed and what would have changed the decision. Timing matters: Lerner and Tetlock show that people who expect to answer beforehand reason more self-critically; those called afterward defend. The Myanmar human-rights assessment in 2018 and the Ethiopia request in 2021 were both afterward.
+
+---
+id: threshold
+kicker: Condition 3 · Proportional threshold
+title: Set **before**, or inferred after
+bloom: teal
+component: Spike
+after: "Break the glass" | Dozens of enforcement levers pulled during exceptionally inciteful events
+before: A threshold | Conditions for restricting virality in a country at war, fixed before the spike, with a named group authorized to pull them
+contrast: January 2025: Meta publicly raised confidence thresholds and tiered automated enforcement by severity. Whatever one thinks of the policy, that is a threshold stated in advance. Whether the tiers fit the stakes is exactly what a forum should examine.
+source: Wired, Dec 2022 (internal "break the glass" documents) · Meta, Jan 7 2025 · Bernoulli (1713) · Douglas (2009)
+---
+Click 0: The principle: the confidence required before reliance was fixed in advance, scaled to the magnitude and reversibility of harm, and backed by something that can actually restrict.
+Click 1: Incitement during a conflict does not arrive on a schedule.
+Click 2: Meta's instruments are "break the glass" measures: levers pulled after the spike. A threshold inferred from the results.
+Click 3: A proportional threshold is drawn beforehand: here is the level, here is who pulls the lever, here is what the lever does. A threshold need not be a number.
+Click 4: One contrast, and one caution.
+Notes:
+**9:30. About 60 seconds.** Bernoulli: fix the standard publicly and in advance so the judge cannot bend it to the case. Douglas: the certainty required rises with the consequences of error. Two characteristic failures: one generic rule for unequal stakes (risk tiers that trigger nothing), and a threshold set at whatever the system achieved. The January 2025 beat is deliberately neutral. The framework is indifferent to which direction a threshold moves; it asks whether it was set beforehand and whether it fits the stakes. Say that once and move on.
+
+---
+id: joint
+kicker: Part 2 · The solution
+title: Three parts of one justification
+bloom: teal
+component: Arch
+stone[]: Evidence
+stone[]: Actors
+stone[]: Threshold
+---
+Click 0: The three conditions are constituents of a single justification.
+Click 1: Remove any one and the justification does not stand. Strong evidence does not compensate for no one who can answer for it.
+Click 2: A justification missing a part is incomplete, which is a different defect from weak. This is not a scorecard that sums across dimensions.
+Click 3: And a finding of defensible reliance does not say the platform is safe. It says the decision was justified on what was knowable at the time.
+Notes:
+**10:30. About 30 seconds.** Quick. Non-compensatory, which separates this from maturity models. Baron and Hershey: judge the decision on what was knowable when it was made, not on how it turned out.
+
+---
+id: twoaudits
+kicker: Part 3 · Two audits of one deployment
+title: Same facts. Opposite findings. Neither depends on the harm.
+bloom: signal
+component: TwoAudits
+vitem[]: Proactive detection rate high
+vitem[]: Community Standards translated into Amharic and Oromo
+vitem[]: Ethiopia assigned to the highest risk tier
+vitem[]: Transparency reports filed on schedule
+ditem[]: Evidence fit the deployment and was ignored
+ditem[]: No one positioned to answer for the whole
+ditem[]: No threshold before the spike, only levers after
+require[]: Demonstrate classifier performance in the four languages before relying at scale
+require[]: Name a group with authority to restrict virality in the country
+require[]: Fix the restriction conditions before the conflict, not during it
+source: Amnesty International, "A death sentence for my father," Oct 2023 · Wired, Dec 2022 · Facebook Files, Oct 2021
+---
+Click 0: Mid-2020. A verification audit and a defensibility audit of the same deployment.
+Click 1: Verification: everything it can check, it finds in order.
+Click 2: Defensibility: the justification fails on all three conditions, while every reported metric looks fine.
+Click 3: November 2021. A professor is shot outside his home after posts naming him circulated for weeks. Run both audits again.
+Click 4: Verification passes again. Nothing it checks has changed. Defensibility returns the same finding, because it did not need the harm to identify the reliance that produced it.
+Click 5: What defensible reliance would have required is exactly what Meta did later, and what Amnesty says came too late.
+Notes:
+**11:00. About 90 seconds.** This is the payoff and the answer to "so what would you have done." The verification audit is unaffected by the harm because it cannot detect it. The defensibility audit is unaffected because its finding was made on contemporaneous evidence in 2020. Do not claim the war would have gone differently. Claim that the reliance which produced the failure was identifiable before the failure, and that the fix was known. The forum that did eventually form was a Kenyan court, in a suit brought by the professor's son and an Amnesty adviser. Courts arrive when audits don't.
+
+---
+id: now
+kicker: Part 3 · Right now
+title: The judgment is being made again
+bloom: signal
+component: NowDial
+stage[]: 2024 | Human reviewers decide; LLMs give a "second opinion" | 100
+stage[]: 2025 | Roughly half of human review requests replaced by LLMs | 50
+stage[]: End of 2026 | Target: LLMs handle over 90% for some content types | 10
+risk: Up to 90% of Meta's own product risk assessments to be automated. Product teams fill in a questionnaire and receive an "instant decision." Areas include AI safety, youth risk, and integrity.
+source: Financial Times, 2026 · NPR, "Meta plans to replace humans with AI to assess privacy and societal risks," May 31 2025
+---
+Click 0: The reliance decision is not history.
+Click 1: In 2025 half of human review requests went to language models. The target is nine in ten for some content types by the end of this year. Staff told the FT the rollout is too fast to oversee.
+Click 2: And the risk review itself is being automated into an instant decision.
+Click 3: Reliance is renewed every day. Is the justification?
+Notes:
+**12:30. About 45 seconds.** Trim here if behind; the slide works with click 1 and click 3 alone. The organization that most needs a justification structure is handing the construction of its justification to the same kind of system the justification is supposed to govern. The model behind moderation was swapped mid-stream (from Gemini to Meta's own). Each of those is a change that reopens the deployment judgment.
+
+---
+id: forum
+kicker: Implications
+title: The forum exists. It asks the wrong question.
+bloom: lilac
+component: ForumQuestions
+forum[]: Oversight Board | Judges individual posts | Was the evidence fit for this deployment, and did it change the decision?
+forum[]: European Commission | Judges compliance with the statute | Who can account for the whole judgment, and what would have changed it?
+forum[]: Courts | Judge the harm, afterward | Was the threshold set before the results, and did it match the stakes?
+limit[]: Not a guarantee of safety or correctness
+limit[]: Not a replacement for technical evaluation or compliance
+limit[]: Not a theory of whether the platform should exist at all
+---
+Click 0: Three forums already sit in judgment of Meta.
+Click 1: Each judges something other than the deployment judgment.
+Click 2: Each could ask one question per condition. None of them is positioned to today.
+Click 3: Three limits, stated fast.
+Notes:
+**13:15. About 50 seconds.** For auditors: interpretive competence, cross-examine the reasoning rather than inventory the files. For organizations: defensibility is built before the audit; accounts composed afterward tend toward self-defense. For regulators: a statement of what procedures must establish. The hazard is that defensibility becomes a new ritual; the safeguards are a contemporaneous record and defense under live questioning.
+
+---
+id: close
+kicker: The burden of truth
+title:
+bloom: amber
+component: Close
+line1: When truth cannot be established, the burden it would have carried passes to those who act, as an obligation to justify.
+line2: Meta passed every audit it was given.
+line3: Nobody gave it the one that asked whether anyone was right to rely.
+meta: ckormylo@nd.edu · Paper under review · Slides at ckormylo.github.io
+---
+Click 0:
+Click 1:
+Click 2:
+Notes:
+**14:05. Finish by 14:45.** Read line one slowly. Pause. Lines two and three are the close. Then stop talking.
