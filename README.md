@@ -6,7 +6,7 @@ Web slides for the 15-minute talk on *The Burden of Truth: A Theory of Defensibi
 
 ## Editing
 
-All the words are in **`slides.md`**. Each slide is a block between two lines of three dashes (its settings), followed by the slide text, `Click N:` captions, and speaker notes after a line that says `Notes:`. Keys ending in `[]` repeat (one line per item; fields inside a line are separated by ` | `). `\n` is a line break. Never put a line of three dashes inside a slide's text.
+All the words are in **`slides.md`**. Each slide is a block between two lines of three dashes (its settings), followed by the slide text and speaker notes after a line that says `Notes:`. (The engine also supports `Click N:` caption lines, which show as an italic line at the bottom of the slide; this deck does not use them, so the words stay in the notes and get said aloud.) Keys ending in `[]` repeat (one line per item; fields inside a line are separated by ` | `). `\n` is a line break. Never put a line of three dashes inside a slide's text.
 
 To see edits live, double-click **`start-deck.bat`** (Windows) or **`start-deck.command`** (Mac). It opens http://localhost:5300 and reloads the deck every time you save `slides.md`, anything in `css/`, or anything in `js/`. It also refreshes `slides.content.js`, the copy of the markdown that the page uses when opened by double-clicking `index.html` and when served by GitHub Pages. Commit `slides.content.js` along with `slides.md`.
 
@@ -16,7 +16,7 @@ If Node.js is not installed, you can still edit `slides.md` and open `index.html
 
 → / Space next · ← back · Shift+→ skip clicks · **P** presenter window (notes, timer, next slide) · **O** overview · **F** full screen · **M** reduce motion · **?** help. The address bar keeps your place (`#/slide/click`).
 
-Timing cues are in the notes. The deck runs about 15 minutes with the cuts marked in the notes for slides 4, 14 and 15.
+Timing cues and a per-click list of what to say are in the notes. The deck runs about 15 minutes with the cuts marked in the notes for slides 4, 14 and 15.
 
 ## Printing
 
