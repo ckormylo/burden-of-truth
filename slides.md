@@ -325,7 +325,7 @@ component: Close
 line1: When truth cannot be established, the burden it would have carried passes to those who act, as an obligation to justify.
 line2: Meta passed every audit it was given.
 line3: Nobody gave it the one that asked whether anyone was right to rely.
-meta: ckormylo@nd.edu · Paper under review · Slides at ckormylo.github.io
+meta: ckormylo@nd.edu · Paper under review · Slides at ckormylo.github.io/burden-of-truth
 ---
 Click 0:
 Click 1:

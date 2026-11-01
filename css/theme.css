@@ -1,69 +1,73 @@
-/* Ledger theme for the defensibility talk: dark stage, warm ink, three role colors.
-   amber = verification (checks, stamps, metrics) · signal = failure, harm, "indefensible" · teal = defensibility
-   slate = neutral structure · lilac = the forum */
+/* Ledger-paper theme for the defensibility talk: light fog stage with faint ruled lines, white cards, four role colors.
+   gold = verification (checks, stamps, metrics) · coral = failure, harm, "indefensible" · green = defensibility · plum = the forum
+   slate = neutral structure. The -d variants are the darker text-safe versions. */
 :root {
-  --stage: #14161B; --panel: #1C1F26; --panel-2: #23272F; --ink: #EDE9E0; --ink-soft: #C9C4B8; --muted: #8E929C; --rule: #2F333C; --rule-2: #3C414B;
-  --amber: #F2B134; --signal: #E4572E; --teal: #3FB8AF; --slate: #8A99B3; --lilac: #B59CE0;
-  --amber-d: #F7C65E; --signal-d: #F27A58; --teal-d: #6FD3CB; --slate-d: #A7B4C9; --lilac-d: #CDB9F0;
-  --amber-ink: #1A1403; --teal-ink: #06211F; --signal-ink: #2A0C04;
-  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
-  --font-voice: "Fraunces", Georgia, serif;
-  --font-body: "IBM Plex Sans", "Segoe UI", Calibri, sans-serif;
-  --font-code: "IBM Plex Mono", Consolas, "Courier New", monospace;
+  --stage: #F2F4F7; --panel: #FFFFFF; --panel-2: #E8EBF0; --ink: #0F1F33; --ink-soft: #3B4A5E; --muted: #6E7A8A; --rule: #D8DEE6; --rule-2: #BFC8D3;
+  --amber: #E3A61A; --signal: #E8532B; --teal: #1E8F7E; --slate: #6B7D94; --lilac: #7C4DB4;
+  --amber-d: #8D6300; --signal-d: #B13616; --teal-d: #0F6B5E; --slate-d: #3E4E63; --lilac-d: #5A338E;
+  --amber-ink: #1A1403; --teal-ink: #FFFFFF; --signal-ink: #FFFFFF;
+  --amber-tint: #FBF1D6; --signal-tint: #FBE3DB; --teal-tint: #DCEFEA; --lilac-tint: #ECE3F7;
+  --font-display: "DM Serif Display", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-voice: "DM Serif Display", Georgia, serif;
+  --font-body: "Manrope", "Segoe UI", Calibri, sans-serif;
+  --font-code: "DM Mono", Consolas, "Courier New", monospace;
   --ease: cubic-bezier(.45,.05,.25,1);
   --dur: 550ms;
 }
 
 * { box-sizing: border-box; }
-html, body { margin: 0; height: 100%; background: #0B0C0F; overflow: hidden; }
+html, body { margin: 0; height: 100%; background: #C9CFD8; overflow: hidden; }
 body { font-family: var(--font-body); color: var(--ink); -webkit-font-smoothing: antialiased; }
 
 /* ---------- stage: fixed 1600 x 900, scaled to fit ---------- */
 #viewport { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
-.stage { position: absolute; left: 0; top: 0; width: 1600px; height: 900px; transform-origin: 0 0; background: var(--stage); overflow: hidden; }
+.stage { position: absolute; left: 0; top: 0; width: 1600px; height: 900px; transform-origin: 0 0; overflow: hidden;
+  background: var(--stage);
+  background-image: repeating-linear-gradient(0deg, rgba(15,31,51,.045) 0 1px, transparent 1px 44px);
+  background-position: 0 16px; }
 .reduced * { transition-duration: 0ms !important; animation-duration: 0ms !important; }
 
 /* ---------- content slide frame ---------- */
 .slide { position: absolute; inset: 0; }
-.slide .strip { position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--bloom, var(--slate)); }
-.slide .kicker { position: absolute; left: 72px; top: 44px; font-family: var(--font-body); font-weight: 600; font-size: 15px; letter-spacing: .18em; text-transform: uppercase; color: var(--bloom-d, var(--slate-d)); }
-.slide .title { position: absolute; left: 70px; top: 70px; right: 72px; font-family: var(--font-display); font-weight: 300; font-size: 46px; line-height: 1.1; color: var(--ink); margin: 0; letter-spacing: -.005em; }
-.slide .title strong { font-weight: 600; color: var(--bloom-d, var(--ink)); }
+.slide .strip { position: absolute; left: 72px; top: 40px; width: 44px; height: 8px; background: var(--bloom, var(--slate)); }
+.slide .kicker { position: absolute; left: 130px; top: 36px; font-family: var(--font-code); font-weight: 500; font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--bloom-d, var(--slate-d)); }
+.slide .title { position: absolute; left: 72px; top: 68px; right: 72px; font-family: var(--font-display); font-weight: 400; font-size: 50px; line-height: 1.08; color: var(--ink); margin: 0; letter-spacing: -.005em; }
+.slide .title strong { font-weight: 400; font-style: italic; color: var(--bloom-d, var(--ink)); }
 .slide .body { position: absolute; left: 72px; top: 160px; right: 72px; bottom: 124px; font-size: 27px; line-height: 1.42; color: var(--ink-soft); }
 .slide .body.split { right: auto; width: 520px; }
 .slide .comp { position: absolute; left: 72px; right: 72px; top: 160px; bottom: 116px; }
 .slide .comp.split { left: 640px; }
 .slide .comp.full { inset: 0; }
-.slide .caption { position: absolute; left: 72px; right: 72px; bottom: 54px; min-height: 40px; font-family: var(--font-voice); font-style: italic; font-weight: 300; font-size: 26px; line-height: 1.3; color: var(--ink); transition: opacity var(--dur) var(--ease); }
+.slide .caption { position: absolute; left: 72px; right: 72px; bottom: 54px; min-height: 40px; font-family: var(--font-voice); font-style: italic; font-size: 27px; line-height: 1.3; color: var(--ink); transition: opacity var(--dur) var(--ease); }
 .slide .caption.swap { opacity: 0; }
-.slide .source { position: absolute; left: 72px; bottom: 18px; right: 200px; font-size: 13px; color: var(--muted); line-height: 1.3; }
-.slide .pageno { position: absolute; right: 30px; bottom: 16px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.slide .badge { position: absolute; right: 72px; top: 42px; font-size: 13px; font-weight: 600; letter-spacing: .08em; padding: 5px 12px; border-radius: 999px; background: var(--panel-2); color: var(--amber-d); text-transform: uppercase; border: 1px solid var(--rule-2); }
+.slide .source { position: absolute; left: 72px; bottom: 18px; right: 200px; font-family: var(--font-code); font-size: 11.5px; color: var(--muted); line-height: 1.35; }
+.slide .pageno { position: absolute; right: 30px; bottom: 16px; font-family: var(--font-code); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.slide .badge { position: absolute; right: 72px; top: 38px; font-family: var(--font-code); font-size: 12px; font-weight: 500; letter-spacing: .08em; padding: 5px 12px; border-radius: 999px; background: var(--amber-tint); color: var(--amber-d); text-transform: uppercase; }
 
 .body p { margin: 0 0 .6em; }
 .body ul, .body ol { margin: 0 0 .6em; padding-left: 1.1em; }
 .body li { margin: 0 0 .4em; }
-.body strong { font-weight: 600; color: var(--ink); }
+.body strong { font-weight: 700; color: var(--ink); }
 .body em { font-family: var(--font-voice); font-style: italic; }
 .body code, code { font-family: var(--font-code); font-size: .9em; background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 0 .3em; }
 .body table { border-collapse: collapse; width: 100%; font-size: 22px; background: var(--panel); }
-.body th { background: var(--panel-2); text-align: left; padding: 10px 14px; font-weight: 600; border-bottom: 1px solid var(--rule-2); color: var(--ink); }
+.body th { background: var(--panel-2); text-align: left; padding: 10px 14px; font-weight: 700; border-bottom: 1px solid var(--rule-2); color: var(--ink); }
 .body td { padding: 10px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; }
 
 /* ---------- title slide ---------- */
 .title-slide .band { position: absolute; left: 0; top: 0; bottom: 0; width: 820px; padding: 150px 0 0 84px; }
-.title-slide .band .k { font-family: var(--font-body); font-weight: 600; letter-spacing: .2em; text-transform: uppercase; font-size: 15px; color: var(--amber-d); }
-.title-slide .band h1 { font-family: var(--font-display); font-weight: 300; font-size: 84px; line-height: 1.0; margin: 26px 0 30px; letter-spacing: -.01em; color: var(--ink); white-space: pre-line; }
-.title-slide .band .sub { font-family: var(--font-voice); font-style: italic; font-weight: 300; font-size: 29px; line-height: 1.3; color: var(--ink-soft); max-width: 640px; }
+.title-slide .band .k { font-family: var(--font-code); font-weight: 500; letter-spacing: .14em; text-transform: uppercase; font-size: 14px; color: var(--amber-d); }
+.title-slide .band h1 { font-family: var(--font-display); font-weight: 400; font-size: 96px; line-height: .98; margin: 26px 0 30px; letter-spacing: -.015em; color: var(--ink); white-space: pre-line; }
+.title-slide .band .sub { font-family: var(--font-voice); font-style: italic; font-size: 30px; line-height: 1.3; color: var(--ink-soft); max-width: 640px; }
 .title-slide .band .meta { position: absolute; left: 84px; bottom: 60px; font-size: 17px; line-height: 1.6; color: var(--muted); white-space: pre-line; }
-.title-slide .band .meta strong { color: var(--ink); font-weight: 500; }
+.title-slide .band .meta strong { color: var(--ink); font-weight: 700; }
 
 /* ---------- divider (unused in this deck, kept for the engine) ---------- */
 .divider .vband { position: absolute; left: 0; top: 0; bottom: 0; width: 420px; background: var(--bloom); }
-.divider .num { position: absolute; left: 80px; top: 120px; font-family: var(--font-display); font-weight: 300; font-size: 240px; line-height: 1; color: var(--stage); }
-.divider h2 { position: absolute; left: 520px; top: 300px; right: 120px; font-family: var(--font-display); font-weight: 300; font-size: 64px; line-height: 1.08; margin: 0; }
+.divider .num { position: absolute; left: 80px; top: 120px; font-family: var(--font-display); font-size: 240px; line-height: 1; color: var(--stage); }
+.divider h2 { position: absolute; left: 520px; top: 300px; right: 120px; font-family: var(--font-display); font-size: 64px; line-height: 1.08; margin: 0; }
 .divider .ctx { position: absolute; left: 520px; top: 470px; right: 160px; font-family: var(--font-voice); font-style: italic; font-size: 30px; color: var(--ink-soft); line-height: 1.35; }
-.divider .k { position: absolute; left: 524px; top: 250px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; font-size: 17px; color: var(--bloom-d); }
+.divider .k { position: absolute; left: 524px; top: 250px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; font-size: 17px; color: var(--bloom-d); }
 .seeds { position: absolute; display: flex; gap: 14px; }
 .seeds i { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--rule-2); display: block; }
 .seeds i.done { background: var(--teal); border-color: var(--teal); }
@@ -72,7 +76,7 @@ body { font-family: var(--font-body); color: var(--ink); -webkit-font-smoothing:
 /* ---------- audit note (engine feature, restyled) ---------- */
 .audit-note { position: absolute; right: 72px; bottom: 110px; width: 520px; background: var(--panel); border: 1px solid var(--rule-2); border-top: 4px solid var(--teal); border-radius: 10px; padding: 14px 20px 16px; font-size: 20px; line-height: 1.35; opacity: 0; transform: translateY(12px); transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease); }
 .audit-note.show { opacity: 1; transform: none; }
-.audit-note .lab { font-weight: 600; font-size: 13px; letter-spacing: .16em; color: var(--teal-d); text-transform: uppercase; margin-bottom: 4px; }
+.audit-note .lab { font-weight: 700; font-size: 13px; letter-spacing: .16em; color: var(--teal-d); text-transform: uppercase; margin-bottom: 4px; }
 
 /* ---------- generic svg text ---------- */
 svg text { font-family: var(--font-body); fill: var(--ink); }
@@ -83,15 +87,15 @@ svg .voice { font-family: var(--font-voice); font-style: italic; }
 .move { transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease); }
 
 /* ---------- overview and help ---------- */
-#overview { position: fixed; inset: 0; background: rgba(20,22,27,.97); z-index: 50; overflow: auto; padding: 40px; display: none; color: var(--ink); }
+#overview { position: fixed; inset: 0; background: rgba(242,244,247,.97); z-index: 50; overflow: auto; padding: 40px; display: none; color: var(--ink); }
 #overview.show { display: block; }
 #overview .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-#overview .tile { background: var(--panel); border: 1px solid var(--rule-2); border-left: 6px solid var(--b, var(--slate)); border-radius: 10px; padding: 12px 14px; cursor: pointer; }
-#overview .tile:hover { background: var(--panel-2); }
+#overview .tile { background: var(--panel); border: 1px solid var(--rule); border-left: 6px solid var(--b, var(--slate)); border-radius: 10px; padding: 12px 14px; cursor: pointer; }
+#overview .tile:hover { box-shadow: 0 2px 10px rgba(15,31,51,.12); }
 #overview .tile .n { font-size: 13px; color: var(--muted); }
-#overview .tile .t { font-weight: 500; font-size: 17px; margin-top: 3px; }
+#overview .tile .t { font-weight: 700; font-size: 17px; margin-top: 3px; }
 #overview .tile.cur { outline: 2px solid var(--amber); }
-#help { position: fixed; right: 16px; bottom: 16px; z-index: 40; font-size: 13px; color: var(--ink-soft); background: rgba(28,31,38,.95); border: 1px solid var(--rule-2); border-radius: 8px; padding: 8px 12px; display: none; line-height: 1.6; }
+#help { position: fixed; right: 16px; bottom: 16px; z-index: 40; font-size: 13px; color: var(--ink-soft); background: rgba(255,255,255,.95); border: 1px solid var(--rule-2); border-radius: 8px; padding: 8px 12px; display: none; line-height: 1.6; }
 #help.show { display: block; }
 #progress { position: fixed; left: 0; bottom: 0; height: 3px; background: var(--amber); z-index: 30; transition: width 300ms; }
 

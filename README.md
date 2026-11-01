@@ -2,7 +2,7 @@
 
 Web slides for the 15-minute talk on *The Burden of Truth: A Theory of Defensibility for AI Audits* (Kormylo, Xu & Berente). Same engine and file layout as the ITAO 40515 lecture decks, with a new theme. 16 slides, no dependencies, works offline.
 
-**Public copy:** served by GitHub Pages from this repository (see the repository's Pages URL).
+**Public copy:** https://ckormylo.github.io/burden-of-truth/ (GitHub Pages, from the `main` branch, root folder).
 
 ## Editing
 
@@ -31,7 +31,7 @@ Open `index.html?print=final` for one page per slide, or `index.html?print=all` 
 
 ## Theme
 
-Dark stage, warm ink. Three role colors carry meaning across every slide: **amber** is verification (checks, stamps, metrics), **signal red** is failure and harm, **teal** is defensibility. Lilac marks the forum.
+Light fog-grey ledger paper with faint ruled lines, white cards, DM Serif Display for titles and captions, Manrope for text, DM Mono for labels and sources. Four role colors carry meaning across every slide: **gold** is verification (checks, stamps, metrics), **coral** is failure and harm, **green** is defensibility, **plum** is the forum. All of it is in `css/theme.css` (`:root` variables) and `css/components.css`; the figures in `talk.js` read their colors from the same variables.
 
 ## Sources
 

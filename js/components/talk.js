@@ -8,6 +8,7 @@
   const on = (el, visible, cls) => el.classList.toggle(cls || "off-up", !visible);
   const stamp = (text, cls) => h("div", { class: "stamp " + (cls || "") }, text);
   const inline = (t) => Deck.inline(t || "");
+  const C = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim() || "#000";
 
   /* ---------- Title: a ledger of checks, each stamped in turn ---------- */
   Deck.components.TitleStamps = {
@@ -174,15 +175,15 @@
       const W = 1456;
       const g = svg(W, 400, host, { style: "position:absolute;left:0;top:0;width:1456px;height:400px;overflow:visible" });
       // reliance line
-      s("line", { x1: 40, y1: 46, x2: W - 40, y2: 46, stroke: "#E4572E", "stroke-width": 4 }, g);
-      s("text", { x: 40, y: 30, class: "lab", text: "RELIANCE ON AUTOMATED DETECTION · FULL SCALE · UNCHANGED", style: "font-size:13px;letter-spacing:.16em;font-weight:600;fill:#F27A58" }, g);
+      s("line", { x1: 40, y1: 46, x2: W - 40, y2: 46, stroke: C("--signal"), "stroke-width": 4 }, g);
+      s("text", { x: 40, y: 30, class: "lab", text: "RELIANCE ON AUTOMATED DETECTION · FULL SCALE · UNCHANGED", style: "font-size:12px;letter-spacing:.14em;font-weight:500;font-family:var(--font-code);fill:" + C("--signal-d") }, g);
       // axis
-      s("line", { x1: 40, y1: 230, x2: W - 40, y2: 230, stroke: "#3C414B", "stroke-width": 2 }, g);
+      s("line", { x1: 40, y1: 230, x2: W - 40, y2: 230, stroke: C("--rule-2"), "stroke-width": 2 }, g);
       const xs = [220, 560, 900, 1240];
       const cards = E.map(([when, what, text], i) => {
         const x = xs[i];
-        s("circle", { cx: x, cy: 230, r: 8, fill: "#14161B", stroke: "#3FB8AF", "stroke-width": 3, class: "ev-dot d" + i }, g);
-        s("line", { x1: x, y1: 60, x2: x, y2: 222, stroke: "#3FB8AF", "stroke-width": 2, "stroke-dasharray": "4 6", class: "ev-stem d" + i, opacity: 0 }, g);
+        s("circle", { cx: x, cy: 230, r: 8, fill: C("--panel"), stroke: C("--teal"), "stroke-width": 3, class: "ev-dot d" + i }, g);
+        s("line", { x1: x, y1: 60, x2: x, y2: 222, stroke: C("--teal"), "stroke-width": 2, "stroke-dasharray": "4 6", class: "ev-stem d" + i, opacity: 0 }, g);
         const c = h("div", { class: "evc show-on off-up" + (i === 1 ? " war" : ""), style: `left:${x - 160}px` }, h("div", { class: "evc-w" }, when), h("div", { class: "evc-k" }, what), h("div", { class: "evc-t" }, text));
         host.appendChild(c); return c;
       });
@@ -202,7 +203,7 @@
       const g = svg(1456, 624, host, { style: "position:absolute;inset:0;overflow:visible" });
       const nodes = H.map(([t, d], i) => {
         const a = -Math.PI / 2 + (i / H.length) * Math.PI * 2, x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
-        s("line", { x1: cx, y1: cy, x2: x, y2: y, stroke: "#3C414B", "stroke-width": 2, "stroke-dasharray": "3 7" }, g);
+        s("line", { x1: cx, y1: cy, x2: x, y2: y, stroke: C("--rule-2"), "stroke-width": 2, "stroke-dasharray": "3 7" }, g);
         const n = h("div", { class: "hand", style: `left:${x - 120}px;top:${y - 40}px` }, h("div", { class: "hand-t" }, t), h("div", { class: "hand-d show-on off-up" }, d));
         host.appendChild(n); return n;
       });
@@ -225,26 +226,26 @@
       const W = 900, Hh = 480;
       const g = svg(W, Hh, host, { style: `position:absolute;left:0;top:20px;width:${W}px;height:${Hh}px;overflow:visible` });
       // axes
-      s("line", { x1: 60, y1: 420, x2: W - 20, y2: 420, stroke: "#3C414B", "stroke-width": 2 }, g);
-      s("line", { x1: 60, y1: 40, x2: 60, y2: 420, stroke: "#3C414B", "stroke-width": 2 }, g);
+      s("line", { x1: 60, y1: 420, x2: W - 20, y2: 420, stroke: C("--rule-2"), "stroke-width": 2 }, g);
+      s("line", { x1: 60, y1: 40, x2: 60, y2: 420, stroke: C("--rule-2"), "stroke-width": 2 }, g);
       s("text", { x: 64, y: 448, class: "muted", text: "time, during a conflict", style: "font-size:15px" }, g);
       s("text", { x: 20, y: 36, class: "muted", text: "incitement reaching feeds", style: "font-size:15px" }, g);
       // curve: calm, rise, spike, decay
       const pts = []; for (let i = 0; i <= 100; i++) { const x = 60 + (i / 100) * (W - 100); const t = i / 100; let y = 0.12 + 0.05 * Math.sin(t * 9); if (t > 0.45) y += Math.exp(-Math.pow((t - 0.62) / 0.07, 2)) * 0.78; if (t > 0.62) y += 0.1 * Math.exp(-(t - 0.62) * 6); pts.push([x, 420 - y * 360]); }
       const d = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
-      const curve = s("path", { d, fill: "none", stroke: "#EDE9E0", "stroke-width": 3.5, class: "curve" }, g);
+      const curve = s("path", { d, fill: "none", stroke: C("--ink"), "stroke-width": 3.5, class: "curve" }, g);
       const len = curve.getTotalLength ? 2600 : 2600; curve.style.strokeDasharray = len; curve.style.strokeDashoffset = len;
       // levers after the spike
       const levers = s("g", { class: "levers fade", opacity: 0 }, g);
-      [0.70, 0.75, 0.80, 0.86].forEach((t, i) => { const x = 60 + t * (W - 100); s("line", { x1: x, y1: 100 + i * 10, x2: x, y2: 420, stroke: "#E4572E", "stroke-width": 3 }, levers); s("rect", { x: x - 7, y: 86 + i * 10, width: 14, height: 14, rx: 3, fill: "#E4572E" }, levers); });
-      s("text", { x: 60 + 0.70 * (W - 100), y: 72, text: A[0], style: "font-size:17px;font-weight:600;fill:#F27A58" }, levers);
+      [0.70, 0.75, 0.80, 0.86].forEach((t, i) => { const x = 60 + t * (W - 100); s("line", { x1: x, y1: 100 + i * 10, x2: x, y2: 420, stroke: C("--signal"), "stroke-width": 3 }, levers); s("rect", { x: x - 7, y: 86 + i * 10, width: 14, height: 14, rx: 3, fill: C("--signal") }, levers); });
+      s("text", { x: 60 + 0.70 * (W - 100), y: 72, text: A[0], style: "font-size:17px;font-weight:700;fill:" + C("--signal-d") }, levers);
       // threshold before
       const thr = s("g", { class: "thr fade", opacity: 0 }, g);
       const ty = 420 - 0.38 * 360;
-      s("line", { x1: 60, y1: ty, x2: W - 20, y2: ty, stroke: "#3FB8AF", "stroke-width": 3, "stroke-dasharray": "10 8" }, thr);
+      s("line", { x1: 60, y1: ty, x2: W - 20, y2: ty, stroke: C("--teal"), "stroke-width": 3, "stroke-dasharray": "10 8" }, thr);
       const cross = pts.find((p, i) => i > 45 && p[1] <= ty);
-      if (cross) { s("circle", { cx: cross[0], cy: cross[1], r: 11, fill: "#3FB8AF" }, thr); s("line", { x1: cross[0], y1: cross[1], x2: cross[0], y2: 420, stroke: "#3FB8AF", "stroke-width": 3 }, thr); s("text", { x: cross[0] - 12, y: 440, text: "restrict here", style: "font-size:15px;font-weight:600;fill:#6FD3CB;text-anchor:end" }, thr); }
-      s("text", { x: 66, y: ty - 10, text: B[0] + " · set before", style: "font-size:17px;font-weight:600;fill:#6FD3CB" }, thr);
+      if (cross) { s("circle", { cx: cross[0], cy: cross[1], r: 11, fill: C("--teal") }, thr); s("line", { x1: cross[0], y1: cross[1], x2: cross[0], y2: 420, stroke: C("--teal"), "stroke-width": 3 }, thr); s("text", { x: cross[0] - 12, y: 440, text: "restrict here", style: "font-size:15px;font-weight:700;fill:" + C("--teal-d") + ";text-anchor:end" }, thr); }
+      s("text", { x: 66, y: ty - 10, text: B[0] + " · set before", style: "font-size:17px;font-weight:700;fill:" + C("--teal-d") }, thr);
       // side cards
       const after = h("div", { class: "sp-card signal show-on off-up" }, h("div", { class: "sp-k" }, A[0]), h("div", { class: "sp-d" }, A[1]));
       const before = h("div", { class: "sp-card teal show-on off-up" }, h("div", { class: "sp-k" }, B[0]), h("div", { class: "sp-d" }, B[1]));
