@@ -41,7 +41,7 @@
         host.appendChild(c); return c;
       });
       const hs = harms.map(([y, d], i) => {
-        const c = h("div", { class: "harm show-on off-up", style: `top:${i * 300 + 10}px` }, h("div", { class: "harm-y" }, y), h("div", { class: "harm-d" }, d));
+        const c = h("div", { class: "harm show-on off-up", style: `top:${i * 150}px` }, h("div", { class: "harm-y" }, y), h("div", { class: "harm-d" }, d));
         host.appendChild(c); return c;
       });
       return { update(k) { cards.forEach((c, i) => on(c, k >= i + 1)); hs.forEach((c, i) => on(c, k >= i + 4)); } };
@@ -50,7 +50,7 @@
 
   /* ---------- Two questions ---------- */
   Deck.components.TwoQuestions = {
-    steps: 2,
+    steps: 1,
     mount(host, ctx) {
       const L = split(ctx.fm.left), R = split(ctx.fm.right);
       const mk = (q, cls, x) => {
@@ -59,23 +59,19 @@
         host.appendChild(el); return el;
       };
       const l = mk(L, "amber", 0), r = mk(R, "teal", 748);
-      const steps = h("div", { class: "tq-steps show-on off-up" }, ...["Why the first question stops working", "What the second one requires", "Two audits of one deployment"].map((t, i) => h("span", {}, h("b", {}, String(i + 1)), t)));
-      host.appendChild(steps);
-      return { update(k) { on(r, k >= 1, "dim"); on(l.querySelector(".tq-d"), k >= 1); on(r.querySelector(".tq-d"), k >= 1); on(steps, k >= 2); } };
+      return { update(k) { on(r, k >= 1, "dim"); on(l.querySelector(".tq-d"), k >= 1); on(r.querySelector(".tq-d"), k >= 1); } };
     },
   };
 
   /* ---------- Four pillars under a beam ---------- */
   Deck.components.FourPillars = {
-    steps: 5,
+    steps: 4,
     mount(host, ctx) {
       const P = (ctx.fm.pillar || []).map(split), E = ctx.fm.example || [];
       const beam = h("div", { class: "beam" }, "Verification");
       host.appendChild(beam);
       const pillars = P.map(([t, d], i) => { const el = h("div", { class: "pillar", style: `left:${40 + i * 350}px` }, h("div", { class: "pl-t" }, t), h("div", { class: "pl-d" }, d)); host.appendChild(el); return el; });
-      const ex = h("div", { class: "examples show-on off-up" }, ...E.map((e) => h("div", { class: "ex" }, h("i", { class: "tick" }), e)));
-      host.appendChild(ex);
-      return { update(k) { pillars.forEach((p, i) => p.classList.toggle("lit", k >= i + 1)); on(ex, k >= 5); } };
+      return { update(k) { pillars.forEach((p, i) => p.classList.toggle("lit", k >= i + 1)); } };
     },
   };
 
@@ -91,15 +87,15 @@
       });
       const gt = h("div", { class: "gt show-on off-up" }, h("span", { class: "gt-k" }, "Ground truth"), h("span", {}, "= whichever of these the labeler happened to be"));
       host.appendChild(gt);
-      const req = h("div", { class: "req show-on off-up" }, ...["Assertions", "Evidence", "Determinate states", "Criteria"].map((t, i) => h("span", { class: i === 2 ? "gone" : "" }, t)));
-      host.appendChild(req);
-      return { update(k) { on(post, k >= 1); readers.forEach((r, i) => on(r, k >= 2)); on(gt, k >= 2); on(req, k >= 3); } };
+      const defn = h("div", { class: "defn show-on off-up" }, h("div", { class: "defn-t" }, ctx.fm.term || "Epistemic indeterminacy"), h("div", { class: "defn-d" }, ctx.fm.definition || ""));
+      host.appendChild(defn);
+      return { update(k) { on(post, k >= 1); readers.forEach((r, i) => on(r, k >= 2)); on(gt, k >= 2); on(defn, k >= 3); } };
     },
   };
 
   /* ---------- Two reflexes ---------- */
   Deck.components.Reflexes = {
-    steps: 5,
+    steps: 4,
     mount(host, ctx) {
       const M = split(ctx.fm.measure), W = split(ctx.fm.wait);
       const col = (x, [t, claim, reveal], cls, art) => {
@@ -111,14 +107,11 @@
       // art for "wait": a share bar plus a row of people figures that thins out
       const share = h("div", { class: "share" }, h("div", { class: "share-bar" }, h("div", { class: "share-auto" }, h("span", {}, "automated")), h("div", { class: "share-hum" }, h("span", {}, "human"))), h("div", { class: "share-legend" }, h("span", {}, h("b", {}, "97.4%"), " automated"), h("span", {}, "2.6% reached a person")), h("div", { class: "people" }, ...Array.from({ length: 24 }, () => h("i", {}))));
       const m = col(0, M, "amber", ruler), w = col(748, W, "signal", share);
-      const bottom = h("div", { class: "rx-bottom show-on off-up" }, "Verification costs more and catches less, exactly as reliance grows.");
-      host.appendChild(bottom);
       return {
         update(k) {
           on(m, k >= 1); on(m.querySelector(".rx-reveal"), k >= 2); ruler.classList.toggle("wobble", k >= 2);
           on(w, k >= 3); on(w.querySelector(".rx-reveal"), k >= 4);
           share.classList.toggle("go", k >= 3); share.classList.toggle("thin", k >= 4);
-          on(bottom, k >= 5);
         },
       };
     },
@@ -135,7 +128,16 @@
       host.append(left, right, arrow);
       const quotes = Q.map(([q, who], i) => { const el = h("div", { class: "cp-q show-on off-up", style: `left:${i * 492}px` }, h("div", { class: "cp-qt" }, q), h("div", { class: "cp-qw" }, who)); host.appendChild(el); return el; });
       const typed = right.querySelector(".typed");
-      let cancel = () => {};
+      const content = h("div", { class: "cp-content" });
+      while (host.firstChild) content.appendChild(host.firstChild);
+      host.appendChild(content);
+      const ov = h("div", { class: "ritual" });
+      const frame = svg(1456, 624, ov, { style: "position:absolute;inset:0;overflow:visible" });
+      const rect = s("rect", { x: 3, y: 3, width: 1450, height: 618, rx: 14, fill: "none", stroke: C("--amber-d"), "stroke-width": 5 }, frame);
+      const RL = 2 * (1450 + 618); rect.style.strokeDasharray = RL; rect.style.strokeDashoffset = RL;
+      ov.append(h("div", { class: "ritual-t" }, ctx.fm.ritual || "Ritual of verification"), h("div", { class: "ritual-s" }, ctx.fm.ritualsub || ""));
+      host.appendChild(ov);
+      let cancel = () => {}, cancel2 = () => {};
       let typedTo = 0;
       return {
         update(k, animate) {
@@ -145,9 +147,14 @@
           if (!animate || !k || typedTo === target) { typed.textContent = statute.slice(0, target); typedTo = target; }
           else cancel = Deck.tween((t) => { const n = Math.round(Deck.lerp(typedTo, target, t)); typed.textContent = statute.slice(0, n); if (t === 1) typedTo = target; }, 900);
           right.querySelector(".stamp").classList.toggle("hidden", k < 2);
-          quotes.forEach((q, i) => on(q, i < 2 ? k >= 3 : k >= 4));
+          quotes.forEach((q, i) => on(q, i < 2 ? k >= 3 : k >= 3));
+          cancel2();
+          content.classList.toggle("blurred", k >= 4);
+          ov.classList.toggle("show", k >= 4);
+          if (k >= 4) { if (animate) cancel2 = Deck.tween((t) => { rect.style.strokeDashoffset = String(RL * (1 - t)); }, 1100); else rect.style.strokeDashoffset = "0"; }
+          else rect.style.strokeDashoffset = String(RL);
         },
-        destroy() { cancel(); },
+        destroy() { cancel(); cancel2(); },
       };
     },
   };
@@ -339,12 +346,12 @@
 
   /* ---------- Close ---------- */
   Deck.components.Close = {
-    steps: 2,
+    steps(fm) { return fm.line3 ? 2 : fm.line2 ? 1 : 0; },
     mount(host, ctx) {
       const l1 = h("div", { class: "cl-1" }, ctx.fm.line1 || ""), l2 = h("div", { class: "cl-2 show-on off-up" }, ctx.fm.line2 || ""), l3 = h("div", { class: "cl-3 show-on off-up" }, ctx.fm.line3 || "");
       const meta = h("div", { class: "cl-meta", html: inline(ctx.fm.meta || "") });
       host.append(l1, l2, l3, meta);
-      return { update(k) { on(l2, k >= 1); on(l3, k >= 2); } };
+      return { update(k) { on(l2, k >= 1 && !!ctx.fm.line2); on(l3, k >= 2 && !!ctx.fm.line3); } };
     },
   };
 })();

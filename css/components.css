@@ -27,9 +27,9 @@
 .chk-t { font-size: 25px; font-weight: 500; color: var(--ink); }
 .chk-d { font-size: 18px; color: var(--muted); margin-top: 4px; line-height: 1.3; }
 .chk .stamp { position: absolute; right: 26px; top: 36px; }
-.harm { position: absolute; left: 820px; width: 636px; padding: 26px 30px; background: var(--signal-tint); border: 1px solid var(--signal); border-left: 6px solid var(--signal); border-radius: 10px; }
-.harm-y { font-family: var(--font-display); font-size: 34px; font-weight: 400; color: var(--signal-d); }
-.harm-d { font-size: 21px; line-height: 1.38; color: var(--ink); margin-top: 8px; }
+.harm { position: absolute; left: 820px; width: 636px; height: 126px; padding: 16px 24px; background: var(--signal-tint); border: 1px solid var(--signal); border-left: 6px solid var(--signal); border-radius: 10px; }
+.harm-y { font-family: var(--font-display); font-size: 26px; color: var(--signal-d); }
+.harm-d { font-size: 17px; line-height: 1.32; color: var(--ink); margin-top: 4px; }
 
 /* ---------- TwoQuestions ---------- */
 .tq { position: absolute; top: 20px; width: 708px; height: 420px; padding: 44px 44px; background: var(--panel); border: 1px solid var(--rule); border-top: 6px solid var(--c); border-radius: 12px; box-shadow: 0 1px 2px rgba(15,31,51,.06); transition: opacity var(--dur) var(--ease); }
@@ -116,11 +116,11 @@
 .os-d { margin-top: 10px; font-size: 22px; line-height: 1.35; color: var(--ink-soft); }
 .lens { position: absolute; left: 20px; top: 20px; width: 440px; height: 280px; border: 4px solid var(--amber); border-radius: 16px; box-shadow: 0 0 0 9999px rgba(0,0,0,0); transition: left var(--dur) var(--ease), width var(--dur) var(--ease), border-color var(--dur) var(--ease); pointer-events: none; }
 .lens.moved { left: 580px; width: 856px; border-color: var(--teal); }
-.os-parts { position: absolute; left: 600px; top: 320px; width: 816px; display: flex; gap: 18px; }
+.os-parts { position: absolute; left: 600px; top: 304px; width: 816px; display: flex; gap: 18px; }
 .os-part { flex: 1; padding: 18px 20px; background: var(--panel); border: 1px solid var(--rule); border-top: 4px solid var(--teal); border-radius: 10px; box-shadow: 0 1px 2px rgba(15,31,51,.06); }
 .os-pt { font-family: var(--font-display); font-weight: 600; font-size: 26px; color: var(--ink); }
 .os-pd { margin-top: 6px; font-size: 19px; color: var(--ink-soft); }
-.simon { position: absolute; left: 40px; top: 470px; width: 1376px; font-family: var(--font-voice); font-style: italic; font-weight: 400; font-size: 29px; line-height: 1.3; color: var(--ink); }
+.simon { position: absolute; left: 40px; top: 440px; width: 1376px; font-family: var(--font-voice); font-style: italic; font-weight: 400; font-size: 29px; line-height: 1.3; color: var(--ink); }
 .simon-w { display: block; margin-top: 8px; font-family: var(--font-body); font-style: normal; font-size: 16px; color: var(--muted); }
 
 /* ---------- EvidenceTimeline ---------- */
@@ -228,3 +228,18 @@
 .cl-2 { position: absolute; left: 0; top: 300px; font-size: 34px; color: var(--ink-soft); }
 .cl-3 { position: absolute; left: 0; top: 356px; width: 1300px; font-size: 34px; color: var(--amber-d); line-height: 1.3; }
 .cl-meta { position: absolute; left: 0; bottom: 0; font-size: 17px; color: var(--muted); }
+
+/* ---------- definition panel (slide 5) ---------- */
+.defn { position: absolute; left: 0; right: 0; top: 486px; display: flex; align-items: baseline; gap: 26px; padding: 22px 30px; background: var(--panel); border: 1px solid var(--signal); border-left: 8px solid var(--signal); border-radius: 10px; box-shadow: 0 1px 2px rgba(15,31,51,.06); }
+.defn-t { font-family: var(--font-display); font-size: 34px; color: var(--signal-d); white-space: nowrap; }
+.defn-d { font-size: 23px; line-height: 1.35; color: var(--ink); }
+
+/* ---------- ritual overlay (slide 7) ---------- */
+.cp-content { position: absolute; inset: 0; transition: filter 900ms var(--ease), opacity 900ms var(--ease); }
+.cp-content.blurred { filter: blur(7px) grayscale(.4); opacity: .45; }
+.ritual { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 400ms var(--ease); }
+.ritual.show { opacity: 1; }
+.ritual-t { position: absolute; left: 0; right: 0; top: 232px; text-align: center; font-family: var(--font-display); font-size: 84px; line-height: 1; color: var(--amber-d); opacity: 0; transform: scale(1.12); transition: opacity 500ms var(--ease) 700ms, transform 500ms var(--ease) 700ms; }
+.ritual-s { position: absolute; left: 0; right: 0; top: 340px; text-align: center; font-family: var(--font-code); font-size: 16px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); opacity: 0; transition: opacity 500ms var(--ease) 950ms; }
+.ritual.show .ritual-t, .ritual.show .ritual-s { opacity: 1; transform: none; }
+.reduced .ritual-t, .reduced .ritual-s, body.print .ritual-t, body.print .ritual-s { transition-delay: 0ms; }
