@@ -149,7 +149,7 @@ judgment: The decision to rely | on automated detection, at full scale, in Amhar
 part[]: Evidence | What did they know?
 part[]: Actors | Who can answer for it?
 part[]: Threshold | How sure did they have to be?
-simon: "Probably the strictest standard we can generally satisfy with real-world problems of this complexity."
+simon: "One may regard 'defensibility' as a weak standard... But it is probably the strictest standard we can generally satisfy with real-world problems of this complexity."
 source: Simon, The Sciences of the Artificial (1996, p. 146) · Toulmin (2003) · Rudner (1953) · Douglas (2009) · Bovens (2007)
 ---
 Notes:
