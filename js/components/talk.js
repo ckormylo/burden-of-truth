@@ -55,11 +55,12 @@
       const L = split(ctx.fm.left), R = split(ctx.fm.right);
       const mk = (q, cls, x) => {
         const [qq, name, d] = q;
-        const el = h("div", { class: "tq " + cls, style: `left:${x}px` }, h("div", { class: "tq-q" }, qq), h("div", { class: "tq-n" }, name), h("div", { class: "tq-d show-on off-up" }, d));
+        const el = h("div", { class: "tq " + cls, style: `left:${x}px` }, h("div", { class: "tq-q" }, qq), h("div", { class: "tq-n" }, name), h("div", { class: "tq-d" }, d));
         host.appendChild(el); return el;
       };
       const l = mk(L, "amber", 0), r = mk(R, "teal", 748);
-      return { update(k) { on(r, k >= 1, "dim"); on(l.querySelector(".tq-d"), k >= 1); on(r.querySelector(".tq-d"), k >= 1); } };
+      r.classList.add("show-on");
+      return { update(k) { on(r, k >= 1); } };
     },
   };
 

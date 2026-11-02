@@ -41,18 +41,18 @@ Notes:
 ---
 id: claim
 kicker: The claim
-title: An audit can ask one of two questions
+title: The predominant approach asks whether the system is **correct**
 bloom: teal
 component: TwoQuestions
-left: Is it correct? | Verification | Compare the system's outputs to a standard fixed in advance. The logic IS audit inherited from financial audit.
-right: Was reliance justified? | Defensibility | Examine the organization's judgment to depend on the system, given the evidence, the uncertainty, the people responsible, and the stakes.
+left: Is it correct? | The predominant approach · Verification | Compare the system's outputs to a standard fixed in advance. The logic IS audit inherited from financial audit.
+right: Was reliance justified? | The alternative · Defensibility | Examine the organization's judgment to depend on the system, given the evidence, the uncertainty, the people responsible, and the stakes.
 ---
 Notes:
-**1:40. About 50 seconds.** State the claim plainly. "For a large class of generative AI deployments, including content moderation at scale, there is no correct output to verify against. The audit should ask instead whether the organization was justified in relying on the system. That is the standard we develop, and we call it defensibility." Then the signpost, spoken: why the first question stops working, what the second one requires, and two audits of one deployment.
+**1:40. About 50 seconds.** Click 0: the predominant approach. Sixty years of IS audit have asked whether the system is correct, by comparing outputs to a standard fixed in advance. Click 1: the alternative. "For a large class of generative AI deployments, including content moderation at scale, there is no correct output to verify against. We propose that the audit ask instead whether the organization was justified in relying on the system. That is the standard we develop, and we call it defensibility." Then the signpost, spoken: why the predominant approach stops working, what the alternative requires, and two audits of one deployment.
 
 Said aloud, per click:
-- Click 0: Sixty years of IS audit have asked the first question.
-- Click 1: When there is no standard to check against, the second question is the one that can still be answered.
+- Click 0: The predominant approach: is the system correct?
+- Click 1: The alternative: was reliance on the system justified?
 ---
 id: pillars
 kicker: Part 1 · The problem
