@@ -1,6 +1,8 @@
 /* Components for the frontier-map deck. Each exports { steps, mount(host, ctx) -> { update(click, animate), destroy } }.
    FactsLinks  : the background slide (six facts, four links).
-   FrontierMap : one map, eight builds ("stage:" in slides.md picks one: p1 ... p7, read).
+   Proposition : a proposition slide. Draws the tracker, the formal wording and the grounding, plus one figure
+                 ("stage:" picks it). p1 to p3 are their own figures; p4 to p7 each add to the map.
+   FrontierMap : the map without a proposition (stage: setup, read).
    Every stage is a pure function render(k, p): k is the click, p in 0..1 is progress of the move into click k.
    That keeps back, skip, print and the presenter preview exact: they all call render(k, 1).
    All words come from slides.md (the slide's own keys, or the shared "layout: data" block). */
@@ -54,11 +56,12 @@
     };
     return g;
   }
-  function stamp(p, x, y, label) {
+  function stamp(p, x, y, label, w, hh, tcls) {
+    w = w || 84; hh = hh || 34;
     const g = s("g", { class: "fm-stamp" }, p);
-    s("rect", { x: -42, y: -17, width: 84, height: 34, rx: 5 }, g);
-    txt(g, 0, 7, label, "fm-stamp-t", "middle");
-    g.set = (o, sc, xx, yy) => { g.style.opacity = o; g.setAttribute("transform", `translate(${xx == null ? x : xx} ${yy == null ? y : yy}) rotate(-8) scale(${sc == null ? 1 : sc})`); };
+    s("rect", { x: -w / 2, y: -hh / 2, width: w, height: hh, rx: 5 }, g);
+    txt(g, 0, hh > 40 ? 12 : 7, label, tcls || "fm-stamp-t", "middle");
+    g.set = (o, sc, xx, yy) => { g.style.opacity = o; g.setAttribute("transform", `translate(${xx == null ? x : xx} ${yy == null ? y : yy}) rotate(-6) scale(${sc == null ? 1 : sc})`); };
     g.set(0, 1);
     return g;
   }
@@ -151,94 +154,172 @@
   /* ================================================================ the eight builds */
   const STAGES = {};
 
-  /* P1 · the flat bar, then the limit of testing comes down */
-  STAGES.p1 = {
-    steps: 2, durs: [0, 1500, 2000],
-    build(B) {
+  /* SETUP · the map itself: points, the verification bar, the limit of testing */
+  STAGES.setup = {
+    steps: 3, durs: [0, 1400, 1500, 2000],
+    build(B, fm, sideEl) {
       const pts = [[170, 470], [260, 250], [340, 400], [450, 90], [540, 290], [640, 440], [720, 70], [800, 230], [890, 400]];
       const dots = pts.map(([x, y]) => dot(B.layer, x, y, ""));
+      const legs = [].slice.call(sideEl.querySelectorAll(".fm-leg"));
       return (k, p) => {
-        const draw = prog(k, p, 1, 0, 0.65), judged = lin(k, p, 1, 0.55, 1) > 0, lab = prog(k, p, 1, 0.6, 1);
-        const c = prog(k, p, 2, 0, 0.75), cy1 = lerp(G.yT, G.ceil, c);
-        B.flat(k >= 1 ? 1 : 0, draw, lab);
-        B.ceil(cy1, k >= 2 ? 1 : 0, 0.6 * (k >= 2 ? 1 : 0), prog(k, p, 2, 0.7, 1));
+        const draw = prog(k, p, 2, 0, 0.65), judged = lin(k, p, 2, 0.55, 1) > 0, lab = prog(k, p, 2, 0.6, 1);
+        const c = prog(k, p, 3, 0, 0.75), cy1 = lerp(G.yT, G.ceil, c);
+        B.flat(k >= 2 ? 1 : 0, draw, lab);
+        B.ceil(cy1, k >= 3 ? 1 : 0, 0.6 * (k >= 3 ? 1 : 0), prog(k, p, 3, 0.7, 1));
         dots.forEach((d, i) => {
-          const y0 = pts[i][1], y = k >= 2 ? Math.max(y0, cy1 + 20) : y0;
+          const y0 = pts[i][1], y = k >= 3 ? Math.max(y0, cy1 + 20) : y0;
           d.setAttribute("cy", y);
+          op(d, prog(k, p, 1, i * 0.07, i * 0.07 + 0.3));
           cls(d, "fm-dot " + (judged ? (y < G.flat ? "gold" : "mute") : ""));
         });
+        legs.forEach((l, i) => l.classList.toggle("on", k >= i + 1));
       };
     },
   };
 
-  /* P2 · each step toward the limit costs ten times the last; the watchers thin out */
-  STAGES.p2 = {
-    steps: 2, durs: [0, 4600, 2200],
-    build(B, fm) {
-      const rungs = (fm.rung || []).map(split), ys = [350, 262, 206, 176], lens = [26, 64, 144, 320], X = 300, Y0 = 480;
-      s("line", { x1: X, x2: X, y1: Y0, y2: 166, class: "fm-rail" }, B.layer);
-      const head = s("g", {}, B.layer);
-      txt(head, 334, 404, fm.col_rate || "", "fm-mono"); txt(head, 560, 404, fm.col_cases || "", "fm-mono");
-      const rows = rungs.map(([rate, n], i) => {
-        const g = s("g", {}, B.layer);
-        s("line", { x1: X - 12, x2: X + 12, y1: ys[i], y2: ys[i], class: "fm-rung" }, g);
-        txt(g, 334, ys[i] + 6, rate, "fm-rate");
-        const bar = s("rect", { x: 560, y: ys[i] - 9, height: 18, width: 1, rx: 3, class: "fm-cost" }, g);
-        const num = txt(g, 570, ys[i] + 6, n, "fm-rate num");
-        return { g, bar, num, len: lens[i] };
+  /* ================================================================ Part 1 figures (viewBox 952 x 588), off the map */
+  const FIGS = {};
+
+  /* P1 · the answer key splits (criterial); the inputs outgrow the tests (coverage) */
+  FIGS.p1 = {
+    steps: 2, durs: [0, 2200, 2800],
+    build(svgEl, fm) {
+      const g = (p) => s("g", {}, p || svgEl);
+      const C = split(fm.crit), V = split(fm.cov), K = split(fm.keys);
+      txt(svgEl, 0, 20, C[0] || "", "fm-mono amber"); txt(svgEl, 0, 46, C[1] || "", "fg-sub");
+      txt(svgEl, 520, 20, V[0] || "", "fm-mono amber"); txt(svgEl, 520, 46, V[1] || "", "fg-sub");
+      const oy = [80, 150, 220, 290, 360], tgt = [112, 112, 242, 372, 372], KX = 262, KW = 190, MX = 178;
+      const lines = oy.map((y) => s("line", { x1: 124, y1: y + 22, x2: KX, y2: 242, class: "fg-line" }, svgEl));
+      oy.forEach((y) => {
+        s("rect", { x: 0, y, width: 124, height: 44, rx: 6, class: "fg-out" }, svgEl);
+        s("line", { x1: 14, x2: 98, y1: y + 17, y2: y + 17, class: "fg-ink" }, svgEl);
+        s("line", { x1: 14, x2: 70, y1: y + 28, y2: y + 28, class: "fg-ink" }, svgEl);
       });
-      const climber = dot(B.layer, X, Y0, "gold", 11);
-      const wg = s("g", {}, B.layer);
-      const wl = txt(wg, 112, 440, fm.watch || "", "fm-mono");
-      const people = [];
-      for (let i = 0; i < 10; i++) {
-        const g = s("g", { transform: `translate(${120 + (i % 5) * 30} ${462 + Math.floor(i / 5) * 34})`, class: "fm-person" }, wg);
-        s("circle", { cx: 0, cy: 0, r: 5.5 }, g); s("path", { d: "M-8 20 Q-8 8 0 8 Q8 8 8 20 Z" }, g);
-        people.push(g);
+      const keys = [0, 1, 2].map((i) => {
+        const k = g(), r = s("rect", { x: KX, y: 212, width: KW, height: 60, rx: 8, class: "fg-key" }, k), t = txt(k, KX + KW / 2, 248, K[i + 1] || "", "fg-key-t", "middle");
+        return { k, r, t };
+      });
+      const one = txt(svgEl, KX + KW / 2, 248, K[0] || "", "fg-key-t", "middle");
+      const marks = oy.map(() => {
+        const m = g(), ok = g(m), q = g(m);
+        s("circle", { cx: MX, cy: 0, r: 13, class: "fg-ok" }, ok); s("path", { d: `M${MX - 6} 0 l4 5 l8 -10`, class: "fg-okt" }, ok);
+        s("circle", { cx: MX, cy: 0, r: 13, class: "fg-q" }, q); txt(q, MX, 6, "?", "fg-qt", "middle");
+        return { m, ok, q };
+      });
+      const CX = 736, CY = 268, SP = 30, dots = [];
+      const tested = s("rect", { x: CX - 3 * SP - 15, y: CY - 2 * SP - 15, width: 6 * SP, height: 5 * SP, rx: 10, class: "fg-tested" }, svgEl);
+      txt(svgEl, CX - 3 * SP - 15, CY - 2 * SP - 24, fm.tested || "", "fm-mono amber halo");
+      for (let r = -6; r <= 6; r++) for (let c = -7; c <= 7; c++) {
+        const inner = Math.abs(r) <= 2 && c >= -3 && c <= 2;
+        if (r === -3 && c >= -3 && c <= -1) continue;
+        const d = s("circle", { cx: CX + c * SP, cy: CY + r * SP, r: 4.5, class: "fg-in" + (inner ? " t" : "") }, svgEl);
+        d.inner = inner; d.dist = Math.hypot(r, c + 0.5) / 9.5;
+        dots.push(d);
       }
-      const order = [7, 2, 9, 4, 0, 6, 3, 8];
-      const cuts = [0, 0.2, 0.46, 0.72, 1];
+      const asked = txt(svgEl, CX + 7 * SP + 6, CY + 6 * SP + 34, fm.asked || "", "fm-mono halo", "end");
+      txt(svgEl, 0, 532, fm.meter || "", "fm-mono");
+      s("rect", { x: 0, y: 544, width: 952, height: 22, rx: 11, class: "fg-track" }, svgEl);
+      const fill = s("rect", { x: 0, y: 544, width: 952, height: 22, rx: 11, class: "fg-fill" }, svgEl);
       return (k, p) => {
-        B.flat(0.4, 1, 0.4); B.ceil(G.ceil, 1, 0.6, 1);
-        let y = Y0;
-        rows.forEach((r, i) => {
-          const hop = prog(k, p, 1, cuts[i], cuts[i + 1] - 0.06), show = prog(k, p, 1, cuts[i + 1] - 0.1, cuts[i + 1]);
-          y = lerp(y, ys[i], hop);
-          op(r.g, show);
-          r.bar.setAttribute("width", Math.max(1, r.len * show));
-          r.num.setAttribute("x", 570 + r.len * show);
+        const a = prog(k, p, 1, 0, 0.6), m = prog(k, p, 1, 0.45, 0.85), b = prog(k, p, 2, 0, 1);
+        keys.forEach(({ k: kg, r, t }, i) => {
+          const y = lerp(212, [82, 212, 342][i], a);
+          r.setAttribute("y", y); t.setAttribute("y", y + 36);
+          op(kg, i === 1 ? 1 : a); op(t, i === 1 ? m : a);
         });
-        climber.setAttribute("cy", y);
-        op(head, prog(k, p, 1, 0.1, 0.2));
-        people.forEach((g) => op(g, 1));
-        order.forEach((idx, j) => op(people[idx], lerp(1, 0.14, prog(k, p, 2, j / 9, (j + 2) / 9))));
-        op(wl, 1);
+        op(one, 1 - m);
+        oy.forEach((y, i) => {
+          const ey = lerp(242, tgt[i], a);
+          lines[i].setAttribute("y2", ey);
+          marks[i].m.setAttribute("transform", `translate(0 ${lerp(y + 22, ey, (MX - 124) / (KX - 124))})`);
+          op(marks[i].ok, 1 - m); op(marks[i].q, m);
+        });
+        dots.forEach((d) => { if (!d.inner) op(d, prog(k, p, 2, d.dist * 0.7, d.dist * 0.7 + 0.25)); });
+        op(asked, prog(k, p, 2, 0.75, 1));
+        fill.setAttribute("width", lerp(lerp(952, 500, prog(k, p, 1, 0.3, 1)), 120, b));
       };
     },
   };
 
-  /* P3 · a reported position rises above the bar; the gap is paperwork */
-  STAGES.p3 = {
-    steps: 2, durs: [0, 1700, 1500],
-    build(B, fm) {
-      const real = [[300, 430], [520, 390], [760, 450]], up = [250, 270, 240];
-      const tethers = real.map(([x, y]) => s("line", { x1: x, x2: x, y1: y, y2: y, class: "fm-tether gold" }, B.layer));
-      real.forEach(([x, y]) => dot(B.layer, x, y, ""));
-      const hollow = real.map(([x, y]) => dot(B.layer, x, y, "hollow"));
-      const stamps = real.map(([x], i) => stamp(B.top, x + 62, up[i] - 22, T(fm, "stamp", "Pass")));
-      const l1 = txt(B.labels, 278, 255, fm.reported || "", "fm-mono amber halo", "end"), l2 = txt(B.labels, 278, 435, fm.real || "", "fm-mono halo", "end");
-      const gap = txt(B.labels, 780, 304, fm.gap || "", "fm-mono coral halo");
+  /* P2 · each tenfold gain in reliability takes ten times the evidence, while fewer people check */
+  FIGS.p2 = {
+    steps: 2, durs: [0, 3600, 2600],
+    build(svgEl, fm) {
+      const rungs = (fm.rung || []).map(split), ys = [156, 252, 348, 444], lens = [12, 38, 120, 380], keep = [8, 5, 3, 1];
+      txt(svgEl, 0, 84, fm.col_rate || "", "fm-mono"); txt(svgEl, 210, 84, fm.col_cases || "", "fm-mono");
+      const wh = txt(svgEl, 712, 84, fm.col_watch || "", "fm-mono");
+      s("line", { x1: 0, x2: 952, y1: 100, y2: 100, class: "fg-rule" }, svgEl);
+      const rows = rungs.map(([rate, n], i) => {
+        const g = s("g", {}, svgEl);
+        txt(g, 0, ys[i] + 10, rate, "fg-big");
+        const bar = s("rect", { x: 210, y: ys[i] - 15, height: 30, width: 1, rx: 4, class: "fm-cost" }, g);
+        const num = txt(g, 222, ys[i] + 8, n, "fg-num");
+        if (i) s("line", { x1: 0, x2: 952, y1: ys[i] - 48, y2: ys[i] - 48, class: "fg-rule soft" }, g);
+        const people = [];
+        for (let j = 0; j < 8; j++) {
+          const pg = s("g", { transform: `translate(${722 + j * 29} ${ys[i] - 12})`, class: "fm-person" }, svgEl);
+          s("circle", { cx: 0, cy: 0, r: 6 }, pg); s("path", { d: "M-9 22 Q-9 9 0 9 Q9 9 9 22 Z" }, pg);
+          people.push(pg);
+        }
+        return { g, bar, num, len: lens[i], people };
+      });
       return (k, p) => {
-        B.flat(1, 1, 1); B.ceil(G.ceil, 0.5, 0.3, 0.5);
-        real.forEach(([x, y], i) => {
-          const r = prog(k, p, 1, i * 0.18, 0.6 + i * 0.18), yy = lerp(y, up[i], r);
-          hollow[i].setAttribute("cy", yy); op(hollow[i], k >= 1 ? 1 : 0);
-          tethers[i].setAttribute("y2", yy);
-          const st = lin(k, p, 2, i * 0.2, 0.35 + i * 0.2);
-          stamps[i].set(st > 0 ? Math.min(1, st * 3) : 0, lerp(2.2, 1, st > 0 ? pop(st) : 0));
+        rows.forEach((r, i) => {
+          const show = prog(k, p, 1, i * 0.22, i * 0.22 + 0.12), grow = prog(k, p, 1, i * 0.22 + 0.05, i * 0.22 + 0.3);
+          op(r.g, show);
+          r.bar.setAttribute("width", Math.max(1, r.len * grow)); r.num.setAttribute("x", 222 + r.len * grow);
+          r.people.forEach((pg, j) => {
+            const here = prog(k, p, 2, 0, 0.15), gone = j >= keep[i] ? prog(k, p, 2, 0.2 + i * 0.16 + (j - keep[i]) * 0.03, 0.4 + i * 0.16 + (j - keep[i]) * 0.03) : 0;
+            op(pg, here * lerp(1, 0.13, gone));
+          });
         });
-        op(l1, prog(k, p, 1, 0.5, 0.8)); op(l2, 1);
-        op(gap, prog(k, p, 2, 0.7, 1));
+        op(wh, prog(k, p, 2, 0, 0.15));
+      };
+    },
+  };
+
+  /* P3 · the question cannot be verified, so the audit verifies documents instead; it passes, decoupled */
+  FIGS.p3 = {
+    steps: 2, durs: [0, 3000, 2200],
+    build(svgEl, fm) {
+      const g = (p) => s("g", {}, p || svgEl);
+      const docs = fm.doc || [], W = 200, H = 168, xs = [16, 250, 484, 718], Y = 244;
+      const q = g();
+      s("rect", { x: 156, y: 6, width: 640, height: 118, rx: 12, class: "fg-qcard" }, q);
+      txt(q, 476, 54, fm.question || "", "fg-qtext", "middle");
+      const chip = (label, c) => { const cg = g(q); s("rect", { x: 346, y: 74, width: 260, height: 32, rx: 16, class: "fg-chip " + c }, cg); txt(cg, 476, 95, label, "fm-mono " + c, "middle"); return cg; };
+      const chipA = chip(fm.blocked || "", "coral"), chipB = chip(fm.still || "", "coral solid");
+      const conn = arrow(svgEl, "conn"); conn.set(476, 132, 476, 226);
+      const instead = txt(svgEl, 524, 184, fm.instead || "", "fm-mono amber");
+      const brk = g();
+      s("path", { d: "M452 170 L500 190 M452 180 L500 200", class: "fg-break" }, brk);
+      txt(brk, 436, 191, fm.decoupled || "", "fm-mono coral", "end");
+      const cards = xs.map((x, i) => {
+        const c = g(), inner = g(c);
+        s("path", { d: `M0 8 Q0 0 8 0 H${W - 34} L${W} 34 V${H - 8} Q${W} ${H} ${W - 8} ${H} H8 Q0 ${H} 0 ${H - 8} Z`, class: "fg-doc" }, inner);
+        s("path", { d: `M${W - 34} 0 V26 Q${W - 34} 34 ${W - 26} 34 H${W}`, class: "fg-fold" }, inner);
+        [34, 54, 74, 94].forEach((yy, j) => s("line", { x1: 22, x2: j === 3 ? 110 : W - 50, y1: yy, y2: yy, class: "fg-ink" }, inner));
+        txt(inner, W / 2, H - 22, docs[i] || "", "fg-doc-t", "middle");
+        const ck = g(c);
+        s("circle", { cx: 0, cy: 0, r: 19, class: "fg-ok" }, ck); s("path", { d: "M-8 0 l6 7 l11 -14", class: "fg-okt big" }, ck);
+        return { c, inner, ck, x };
+      });
+      const under = txt(svgEl, 476, Y + H + 40, fm.checked || "", "fm-mono amber", "middle");
+      const pass = stamp(svgEl, 476, Y + 60, fm.pass || "", 330, 64, "fm-stamp-t big");
+      return (k, p) => {
+        const dec = prog(k, p, 2, 0.45, 0.75);
+        op(conn, prog(k, p, 1, 0, 0.14) * lerp(1, 0.25, dec)); op(instead, prog(k, p, 1, 0.06, 0.2) * lerp(1, 0.35, dec));
+        cards.forEach(({ c, ck, x }, i) => {
+          const a = prog(k, p, 1, 0.15 + i * 0.17, 0.35 + i * 0.17), t = lin(k, p, 1, 0.32 + i * 0.17, 0.46 + i * 0.17);
+          op(c, a); c.setAttribute("transform", `translate(${x} ${Y + lerp(18, 0, a)})`);
+          op(ck, t > 0 ? 1 : 0); ck.setAttribute("transform", `translate(${W - 6} 6) scale(${t > 0 ? lerp(2.2, 1, pop(t)) : 1})`);
+        });
+        op(under, prog(k, p, 1, 0.85, 1));
+        const st = lin(k, p, 2, 0, 0.3);
+        pass.set(st > 0 ? Math.min(1, st * 3) : 0, lerp(2, 1, st > 0 ? pop(st) : 0));
+        op(brk, dec);
+        const sw = prog(k, p, 2, 0.65, 0.95);
+        op(chipA, 1 - sw); op(chipB, sw);
       };
     },
   };
@@ -319,46 +400,49 @@
     },
   };
 
-  /* P7 · a forum asks why: the position nobody holds falls back, the owned one stands */
+  /* P7 · a forum outside the map asks the three link questions; an owner can answer, a record cannot */
   STAGES.p7 = {
-    steps: 2, durs: [0, 2000, 2200],
-    build(B, fm) {
-      const A = { x: 360, real: 430, rep: 250 }, O = { x: 640, y: 200 }, F = { x: 790, y: 440, w: 150, h: 56 };
-      const tether = s("line", { x1: A.x, x2: A.x, y1: A.real, y2: A.rep, class: "fm-tether gold" }, B.layer);
+    steps: 2, durs: [0, 2600, 3000],
+    build(B, fm, sideEl) {
+      const A = { x: 700, y: 172 }, R = { x: 360, y: 250 }, EX = 1012;
+      const rows = [].slice.call(sideEl.querySelectorAll(".fm-fp-r")), panel = sideEl.querySelector(".fm-fp");
+      const band = s("line", { x1: R.x, x2: R.x, y1: 66, y2: 528, class: "fm-unknown" }, B.layer);
       const q1 = s("line", { class: "fm-ask" }, B.layer), q2 = s("line", { class: "fm-ask" }, B.layer);
-      dot(B.layer, A.x, A.real, "");
-      const rep = dot(B.layer, A.x, A.rep, "hollow");
-      const ring = s("circle", { cx: O.x, cy: O.y, r: 10, class: "fm-hold" }, B.layer);
-      dot(B.layer, O.x, O.y, "teal", 11);
-      const flag = s("path", { d: `M${O.x} ${O.y - 12} v-30 l22 8 l-22 8`, class: "fm-flag" }, B.layer);
-      const st = stamp(B.top, A.x + 62, A.rep - 22, T(fm, "stamp", "Pass"));
-      const forum = s("g", { class: "fm-forum" }, B.top);
-      s("rect", { x: F.x, y: F.y, width: F.w, height: F.h, rx: 10 }, forum); txt(forum, F.x + F.w / 2, F.y + 36, fm.forum || "", "fm-forum-t", "middle");
-      const bub = [0, 1].map(() => { const g = s("g", { class: "fm-bub" }, B.top); s("circle", { r: 17 }, g); txt(g, 0, 6, "?", "fm-bub-t", "middle"); return g; });
-      const from = [[F.x, F.y + 12], [F.x + 40, F.y]], to = [[A.x + 14, A.rep + 8], [O.x + 12, O.y + 12]];
+      const from = [[EX, 118], [EX, 182]], to = [[A.x + 14, A.y + 3], [R.x + 14, R.y + 2]];
       [q1, q2].forEach((q, i) => { q.setAttribute("x1", from[i][0]); q.setAttribute("y1", from[i][1]); });
-      const lr = txt(B.labels, A.x - 22, A.rep + 5, fm.reported || "", "fm-mono amber halo", "end");
-      const ln = txt(B.labels, A.x - 22, A.real + 5, fm.unowned || "", "fm-mono halo", "end");
-      const lo = txt(B.labels, O.x + 34, O.y - 26, fm.owned || "", "fm-mono teal halo");
-      const lask = txt(B.labels, F.x + F.w / 2, F.y + F.h + 22, fm.ask || "", "fm-mono lilac halo", "middle");
+      const ring = s("circle", { cx: A.x, cy: A.y, r: 10, class: "fm-hold" }, B.layer);
+      dot(B.layer, A.x, A.y, "teal", 11);
+      s("path", { d: `M${A.x} ${A.y - 12} v-30 l22 8 l-22 8`, class: "fm-flag" }, B.layer);
+      const rec = dot(B.layer, R.x, R.y, "gold", 11), recQ = s("g", {}, B.layer);
+      s("circle", { cx: R.x, cy: R.y, r: 15, class: "fm-dot hollow q" }, recQ); txt(recQ, R.x, R.y + 7, "?", "fm-recq", "middle");
+      const st = stamp(B.top, R.x + 74, R.y - 26, T(fm, "stamp", ""), 112, 34);
+      const bub = [0, 1].map(() => { const g = s("g", { class: "fm-bub" }, B.top); s("circle", { r: 17 }, g); txt(g, 0, 7, "?", "fm-bub-t", "middle"); return g; });
+      txt(B.labels, A.x - 32, A.y - 4, fm.owned || "", "fm-mono teal halo", "end");
+      const lh = txt(B.labels, A.x - 32, A.y + 15, fm.holds || "", "fm-mono teal halo", "end");
+      txt(B.labels, R.x - 26, R.y + 5, fm.unowned || "", "fm-mono amber halo", "end");
+      const lu = txt(B.labels, R.x - 26, R.y + 24, fm.unknown || "", "fm-mono coral halo", "end");
       return (k, p) => {
         B.flat(1, 1, 1); B.ceil(G.ceil, 0.4, 0, 0); B.curve(1, 0, 1, 1); B.cross(0.6, 0);
-        op(forum, prog(k, p, 1, 0, 0.25)); op(lask, prog(k, p, 1, 0.15, 0.4));
-        [q1, q2].forEach((q, i) => {
-          const t = prog(k, p, 1, 0.25 + i * 0.12, 0.8 + i * 0.12);
-          const x = lerp(from[i][0], to[i][0], t), y = lerp(from[i][1], to[i][1], t);
-          q.setAttribute("x2", x); q.setAttribute("y2", y); op(q, k >= 1 ? 1 : 0);
-          bub[i].setAttribute("transform", `translate(${x} ${y})`);
-          op(bub[i], k === 1 && t > 0 ? 1 : k >= 2 ? 1 - prog(k, p, 2, 0, 0.2) : 0);
+        if (panel) panel.classList.toggle("on", k >= 1);
+        rows.forEach((r, i) => {
+          op(r, prog(k, p, 1, 0.1 + i * 0.22, 0.3 + i * 0.22));
+          const y = r.querySelector(".yes"), n = r.querySelector(".no");
+          const ty = lin(k, p, 2, i * 0.12, i * 0.12 + 0.12), tn = lin(k, p, 2, 0.42 + i * 0.1, 0.54 + i * 0.1);
+          y.style.opacity = ty > 0 ? 1 : 0; y.style.transform = `scale(${ty > 0 ? lerp(2, 1, pop(ty)) : 1})`;
+          n.style.opacity = tn > 0 ? 1 : 0; n.style.transform = `scale(${tn > 0 ? lerp(2, 1, pop(tn)) : 1})`;
         });
-        const fall = prog(k, p, 2, 0.15, 0.7), y = lerp(A.rep, A.real, fall);
-        rep.setAttribute("cy", y); tether.setAttribute("y2", y); op(rep, 1 - prog(k, p, 2, 0.62, 0.72));
-        if (k >= 1) { q1.setAttribute("x2", lerp(to[0][0], A.x + 14, 1)); if (k >= 2) q1.setAttribute("y2", y + 8); }
-        st.set(1 - prog(k, p, 2, 0, 0.22), 1, A.x + 62, y - 22);
-        op(lr, 1 - prog(k, p, 2, 0.1, 0.3));
-        const hold = prog(k, p, 2, 0.45, 0.9);
-        ring.setAttribute("r", lerp(10, 24, hold)); op(ring, hold);
-        op(flag, 1); op(ln, 1); op(lo, 1);
+        [q1, q2].forEach((q, i) => {
+          const t = prog(k, p, 1, 0.3 + i * 0.12, 0.85 + i * 0.12);
+          const x = lerp(from[i][0], to[i][0], t), y = lerp(from[i][1], to[i][1], t);
+          q.setAttribute("x2", x); q.setAttribute("y2", y);
+          op(q, k >= 1 ? lerp(1, 0.4, prog(k, p, 2, 0.7, 1)) : 0);
+          bub[i].setAttribute("transform", `translate(${x} ${y})`);
+          op(bub[i], k === 1 && t > 0 ? 1 : k >= 2 ? 1 - prog(k, p, 2, 0, 0.15) : 0);
+        });
+        const hold = prog(k, p, 2, 0.3, 0.6), lost = prog(k, p, 2, 0.7, 1);
+        ring.setAttribute("r", lerp(10, 24, hold)); op(ring, hold); op(lh, hold);
+        op(rec, 1 - lost); op(recQ, lost); op(band, lost); op(lu, lost);
+        st.set(1 - lost);
       };
     },
   };
@@ -393,11 +477,26 @@
     },
   };
 
-  function side(host, fm) {
-    const el = h("div", { class: "fm-side" });
+  function side(host, fm, isProp) {
+    const el = h("div", { class: "fm-side" + (isProp ? " prop" : "") });
+    const asks = fm.ask || [];
+    if (asks.length) {
+      const panel = h("div", { class: "fm-fp" });
+      panel.appendChild(h("div", { class: "fm-fp-h" }, h("span", { class: "fm-fp-t" }, fm.forum || ""), h("span", { class: "fm-fp-c teal" }, fm.owned || ""), h("span", { class: "fm-fp-c amber" }, fm.unowned || "")));
+      asks.forEach((q) => panel.appendChild(h("div", { class: "fm-fp-r" }, h("span", { class: "fm-fp-q" }, q), h("span", { class: "fm-fp-m yes" }, "✓"), h("span", { class: "fm-fp-m no" }, "✕"))));
+      el.appendChild(panel);
+    }
     if (fm.adds) el.appendChild(h("div", { class: "fm-adds" }, h("div", { class: "k" }, T(fm, "map.addslabel", "Adds to the map")), h("div", { class: "fm-adds-t", html: Deck.inline(fm.adds) })));
+    const cites = (fm.cite || []).map(split);
+    if (cites.length) {
+      const box = h("div", { class: "fm-cites" }, h("div", { class: "k" }, T(fm, "map.groundlabel", "Grounding")));
+      cites.forEach(([who, what]) => box.appendChild(h("div", { class: "fm-cite" }, h("div", { class: "fm-cite-w" }, who), h("div", { class: "fm-cite-t", html: Deck.inline(what || "") }))));
+      el.appendChild(box);
+    }
     (fm.row || []).map(split).forEach(([tag, text, color]) =>
       el.appendChild(h("div", { class: "fm-row " + (color || "slate") }, h("div", { class: "fm-tag" }, tag), h("div", { class: "fm-row-t", html: Deck.inline(text) }))));
+    (fm.legend || []).map(split).forEach(([tag, text]) =>
+      el.appendChild(h("div", { class: "fm-leg" }, h("div", { class: "fm-tag" }, tag), h("div", { class: "fm-row-t", html: Deck.inline(text) }))));
     const fixes = (fm.fix || []).map(split);
     (fm.q || []).map(split).forEach(([q, a], i, all) => {
       const card = h("div", { class: "fm-q" }, h("div", { class: "fm-q-n" }, String(i + 1)), h("div", {}, h("div", { class: "fm-q-q" }, q), h("div", { class: "fm-q-a" }, a)));
@@ -408,20 +507,34 @@
     return el;
   }
 
-  Deck.components.FrontierMap = {
-    steps: (fm) => (STAGES[fm.stage] || {}).steps || 0,
-    mount(host, ctx) {
-      host.classList.add("fm-host");
-      const fm = ctx.fm, st = STAGES[fm.stage];
-      if (!st) { host.appendChild(h("div", { style: { color: "#B13616", fontSize: "20px" } }, "Unknown stage: " + fm.stage)); return { update() {} }; }
-      const box = h("div", { class: "fm-map" });
-      host.appendChild(box);
-      const svgEl = Deck.svg(1010, 624, box);
-      const B = base(svgEl, fm);
-      const sideEl = side(host, fm);
-      return runner(st.build(B, fm, sideEl), st.durs, ctx);
-    },
-  };
+  /* what every proposition slide carries besides its figure: the part's color and rail, the tracker of
+     seven propositions in two groups, and the proposition as it would be worded in the paper */
+  function chrome(ctx) {
+    const fm = ctx.fm, el = ctx.slideEl, n = +fm.pnum, part = n <= 3 ? 1 : 2;
+    el.classList.add("prop", "part" + part);
+    el.appendChild(h("div", { class: "prail" }));
+    const tr = h("div", { class: "ptrack" });
+    [[1, [1, 2, 3]], [2, [4, 5, 6, 7]]].forEach(([g, ns]) =>
+      tr.appendChild(h("div", { class: "pg g" + g + (g === part ? " cur" : "") }, h("span", { class: "pg-l" }, T(fm, "track" + g, "")), ...ns.map((x) => h("i", { class: x === n ? "now" : "" }, String(x))))));
+    el.appendChild(tr);
+    el.appendChild(h("div", { class: "pstate" }, h("span", { class: "pstate-l" }, `Proposition ${fm.pnum} (${fm.pname || ""}).`), h("span", { class: "pstate-t", html: " " + Deck.inline(fm.prop || "") })));
+  }
+
+  function mountStage(host, ctx, isProp) {
+    host.classList.add("fm-host");
+    if (isProp) { host.classList.add("prop"); chrome(ctx); }
+    else if (ctx.fm.part) { ctx.slideEl.classList.add("part" + ctx.fm.part); ctx.slideEl.appendChild(h("div", { class: "prail" })); }
+    const fm = ctx.fm, st = STAGES[fm.stage], fig = FIGS[fm.stage];
+    if (!st && !fig) { host.appendChild(h("div", { style: { color: "#B13616", fontSize: "20px" } }, "Unknown stage: " + fm.stage)); return { update() {} }; }
+    const box = h("div", { class: "fm-map" + (fig ? " fig" : "") });
+    host.appendChild(box);
+    const sideEl = side(host, fm, isProp);
+    if (fig) return runner(fig.build(Deck.svg(952, 588, box), fm, sideEl), fig.durs, ctx);
+    return runner(st.build(base(Deck.svg(1010, 624, box), fm), fm, sideEl), st.durs, ctx);
+  }
+  const stepsOfStage = (fm) => ((STAGES[fm.stage] || FIGS[fm.stage] || {}).steps) || 0;
+  Deck.components.FrontierMap = { steps: stepsOfStage, mount: (host, ctx) => mountStage(host, ctx, false) };
+  Deck.components.Proposition = { steps: stepsOfStage, mount: (host, ctx) => mountStage(host, ctx, true) };
 
   /* ================================================================ background: six facts, four links */
   Deck.components.FactsLinks = {

@@ -1,6 +1,6 @@
 # The Burden of Truth · building the frontier map
 
-Nine web slides that walk through the current thinking for the paper (Kormylo, Xu & Berente): one background slide, one slide per proposition, and one on how to read the map. The frontier map is built up one element per proposition. Same engine and file layout as the talk deck and the ITAO 40515 lecture decks. No dependencies, works offline.
+Twelve web slides that walk through the current thinking for the paper (Kormylo, Xu & Berente). A background slide, then two parts. Part 1 (Propositions 1 to 3) is why verification falls short, each with its own figure. Part 2 (Propositions 4 to 7) is what defensibility adds, and each of those adds one element to the frontier map. A last slide says how to read the map. Same engine and file layout as the talk deck and the ITAO 40515 lecture decks. No dependencies, works offline.
 
 ## Where it goes
 
@@ -25,14 +25,19 @@ Print with `index.html?print=final` (one page per slide) or `index.html?print=al
 | # | Slide | What the animation does |
 |---|---|---|
 | 1 | Background | Six facts get ticked one by one, then four links are drawn between them |
-| 2 | P1 Indeterminacy | The flat verification bar is drawn, then the limit of testing comes down and pushes points under it |
-| 3 | P2 Reliability | A point climbs toward the limit in shrinking steps while the cases needed grow tenfold; the people checking thin out |
-| 4 | P3 Theater | A reported position rises above the bar and gets stamped; the real one stays put |
-| 5 | P4 Fit | Three uses credited at the same height sink to what the evidence establishes for each task |
-| 6 | P5 Proportionality | The fixed bar pivots into a rising one around the use it was set for; four regions appear |
-| 7 | P6 Revisability | A control on file ticks and the bar only shudders; a control that works lowers it |
-| 8 | P7 Answerability | A forum asks why; the position nobody holds falls back, the owned one stands |
-| 9 | How to read the map | Three questions, then three repair moves |
+| 2 | Part 1 divider | |
+| 3 | P1 Indeterminacy | The answer key splits into several acceptable answers; the inputs outgrow the tested patch; a meter of what verification can establish shrinks |
+| 4 | P2 Reliability | Each tenfold gain in reliability takes ten times the clean cases, while the people still checking thin out |
+| 5 | P3 Theater | The real question cannot be verified, so the audit ticks four documents instead; it passes, decoupled from the question |
+| 6 | Part 2 divider | |
+| 7 | The map | Points appear, the flat verification bar is drawn, the limit of testing comes down |
+| 8 | P4 Fit | Three uses credited at the same height sink to what the evidence establishes for each task |
+| 9 | P5 Proportionality | The fixed bar pivots into a rising one around the use it was set for; four regions appear |
+| 10 | P6 Revisability | A control on file ticks and the bar only shudders; a control that works lowers it |
+| 11 | P7 Answerability | A forum beside the map asks the three link questions; the owner answers and holds, the record cannot and its position becomes unknown |
+| 12 | How to read the map | Three questions, then three repair moves |
+
+Each proposition slide shows the plain-language version as its title, the wording as it would appear in the paper underneath (`prop:` in `slides.md`), and two or three sources in the side panel (`cite[]:`). The tracker at the top right and the color (gold for Part 1, green for Part 2) show which group a proposition belongs to.
 
 ## Files
 
