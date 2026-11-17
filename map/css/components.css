@@ -1,0 +1,99 @@
+/* Figures for the frontier-map deck. Sizes are stage pixels. The figure area is 1456 x 644 (left 72, top 196).
+   Role colors follow the talk deck: gold = verification, coral = failure, green = defensibility, plum = the forum. */
+.slide .comp.fm-host { top: 196px; bottom: 60px; }
+.k { font-family: var(--font-code); font-weight: 500; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+/* ---------- the map ---------- */
+.fm-map { position: absolute; left: 0; top: 0; width: 1010px; height: 624px; }
+.fm-map svg { overflow: visible; }
+.fm-t { font-size: 17px; }
+.fm-axis { font-family: var(--font-code); font-weight: 500; font-size: 15px; letter-spacing: .14em; text-transform: uppercase; fill: var(--ink); }
+.fm-axis-sub { font-size: 15px; fill: var(--muted); }
+.fm-mono { font-family: var(--font-code); font-weight: 500; font-size: 13.5px; letter-spacing: .1em; text-transform: uppercase; fill: var(--muted); }
+.fm-mono.amber { fill: var(--amber-d); } .fm-mono.teal { fill: var(--teal-d); } .fm-mono.coral { fill: var(--signal-d); } .fm-mono.slate { fill: var(--slate-d); } .fm-mono.lilac { fill: var(--lilac-d); }
+.halo { paint-order: stroke; stroke: var(--stage); stroke-width: 6px; stroke-linejoin: round; }
+.fm-reg-t { font-family: var(--font-display); font-size: 27px; }
+.fm-reg-t.coral { fill: var(--signal-d); } .fm-reg-t.amber { fill: var(--amber-d); }
+.fm-quiet { font-family: var(--font-voice); font-style: italic; font-size: 20px; fill: var(--muted); }
+.fm-name { font-size: 17px; font-weight: 700; fill: var(--ink); }
+.fm-rate { font-size: 18px; font-weight: 700; fill: var(--ink); font-variant-numeric: tabular-nums; }
+.fm-rate.num { font-family: var(--font-code); font-weight: 500; fill: var(--signal-d); }
+
+.fm-arrow line, .fm-arrow path { fill: none; stroke: var(--ink-soft); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.fm-arrow.axis line, .fm-arrow.axis path { stroke: var(--ink-soft); stroke-width: 1.6; }
+.fm-arrow.teal line, .fm-arrow.teal path { stroke: var(--teal-d); stroke-width: 2.5; }
+.fm-arrow.fix line, .fm-arrow.fix path { stroke: var(--ink); stroke-width: 3.5; }
+.fm-flat { stroke: var(--amber-d); stroke-width: 3.5; stroke-dasharray: 12 8; }
+.fm-ceil { stroke: var(--slate-d); stroke-width: 2.5; stroke-dasharray: 2 8; stroke-linecap: round; }
+.fm-hatchline { stroke: var(--rule-2); stroke-width: 3; }
+.fm-curve { fill: none; stroke: var(--teal); stroke-width: 5; stroke-linecap: round; }
+.fm-curve.ghost, .fm-curve.low { stroke: var(--teal); stroke-width: 2.5; stroke-dasharray: 3 9; }
+.fm-cross { fill: var(--stage); stroke: var(--ink); stroke-width: 2.5; }
+.fm-pulse { fill: none; stroke: var(--teal); stroke-width: 3; }
+.fm-reg.fa { fill: var(--signal-tint); } .fm-reg.nr { fill: var(--amber-tint); }
+
+.fm-dot { fill: var(--slate); stroke: var(--stage); stroke-width: 2.5; transition: fill 350ms var(--ease); }
+.fm-dot.gold { fill: var(--amber); } .fm-dot.teal { fill: var(--teal); } .fm-dot.coral { fill: var(--signal); } .fm-dot.mute { fill: var(--rule-2); }
+.fm-dot.hollow { fill: var(--stage); stroke: var(--amber-d); stroke-width: 3.5; }
+.fm-dot.ghost { fill: none; stroke: var(--amber-d); stroke-width: 2.5; stroke-dasharray: 4 5; }
+.fm-tether { stroke-width: 2.5; stroke-dasharray: 3 6; stroke-linecap: round; }
+.fm-tether.gold { stroke: var(--amber-d); } .fm-tether.teal { stroke: var(--teal-d); }
+.fm-guide { stroke: var(--amber-d); stroke-width: 1.5; stroke-dasharray: 2 6; opacity: .7; }
+.fm-rail { stroke: var(--rule-2); stroke-width: 3; }
+.fm-rung { stroke: var(--slate); stroke-width: 3; stroke-linecap: round; }
+.fm-cost { fill: var(--signal-tint); stroke: var(--signal); stroke-width: 1.5; }
+.fm-person circle, .fm-person path { fill: var(--slate); }
+.fm-person { transition: opacity 200ms; }
+
+.fm-stamp rect { fill: var(--stage); stroke: var(--amber-d); stroke-width: 3; }
+.fm-stamp-t { font-family: var(--font-display); font-size: 21px; letter-spacing: .14em; text-transform: uppercase; fill: var(--amber-d); }
+
+.fm-chip .bg { fill: var(--panel); stroke: var(--rule-2); stroke-width: 1.5; }
+.fm-chip .box { fill: var(--panel); stroke: var(--rule-2); stroke-width: 2; }
+.fm-chip .tick { fill: none; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 30; stroke-dashoffset: 30; }
+.fm-chip.amber .tick { stroke: var(--amber-d); } .fm-chip.teal .tick { stroke: var(--teal-d); }
+.fm-chip.amber.on .box, .fm-chip.amber.on .bg { stroke: var(--amber); } .fm-chip.teal.on .box, .fm-chip.teal.on .bg { stroke: var(--teal); }
+.fm-chip-t { font-size: 18px; font-weight: 500; fill: var(--ink); }
+
+.fm-forum rect { fill: var(--lilac-tint); stroke: var(--lilac); stroke-width: 2; }
+.fm-forum-t { font-family: var(--font-display); font-size: 26px; fill: var(--lilac-d); }
+.fm-ask { stroke: var(--lilac); stroke-width: 2.5; stroke-dasharray: 3 7; stroke-linecap: round; }
+.fm-bub circle { fill: var(--lilac); stroke: var(--stage); stroke-width: 2.5; }
+.fm-bub-t { font-family: var(--font-display); font-size: 21px; fill: #fff; }
+.fm-hold { fill: none; stroke: var(--teal); stroke-width: 3.5; }
+.fm-flag { fill: var(--teal); stroke: var(--teal-d); stroke-width: 2.5; stroke-linejoin: round; }
+
+/* ---------- side panel ---------- */
+.fm-side { position: absolute; left: 1052px; top: 30px; width: 404px; display: flex; flex-direction: column; gap: 18px; }
+.fm-adds { padding: 0 0 18px; border-bottom: 1px solid var(--rule-2); }
+.fm-adds-t { margin-top: 8px; font-family: var(--font-voice); font-style: italic; font-size: 27px; line-height: 1.22; color: var(--ink); }
+.fm-row { background: var(--panel); border: 1px solid var(--rule); border-left: 6px solid var(--c); border-radius: 10px; padding: 14px 18px 16px; box-shadow: 0 1px 2px rgba(15,31,51,.06); }
+.fm-row.amber { --c: var(--amber); --cd: var(--amber-d); } .fm-row.teal { --c: var(--teal); --cd: var(--teal-d); } .fm-row.signal { --c: var(--signal); --cd: var(--signal-d); } .fm-row.slate { --c: var(--slate); --cd: var(--slate-d); }
+.fm-tag { font-family: var(--font-code); font-weight: 500; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--cd); }
+.fm-row-t { margin-top: 5px; font-size: 21px; line-height: 1.32; color: var(--ink); }
+.fm-q { display: flex; gap: 16px; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 16px 18px; opacity: .32; transition: opacity var(--dur) var(--ease), border-color var(--dur) var(--ease); }
+.fm-q.on { opacity: 1; border-color: var(--teal); }
+.fm-q-n { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--teal); color: var(--teal-d); display: grid; place-items: center; font-family: var(--font-display); font-size: 22px; }
+.fm-q-q { font-family: var(--font-display); font-size: 25px; line-height: 1.15; color: var(--ink); }
+.fm-q-a { margin-top: 6px; font-size: 18.5px; line-height: 1.35; color: var(--ink-soft); }
+.fm-fixes { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; font-size: 17px; color: var(--ink); }
+.fm-fixes b { display: inline-block; width: 26px; font-weight: 700; color: var(--teal-d); }
+
+/* ---------- background slide: facts and links ---------- */
+.fl-lines { position: absolute; left: 0; top: 0; overflow: visible; }
+.fl-frame { fill: none; stroke: var(--rule-2); stroke-width: 2; stroke-dasharray: 8 8; }
+.fm-arrow.feed line, .fm-arrow.feed path { stroke: var(--ink-soft); stroke-width: 2.5; }
+.fl-link { stroke: var(--teal); stroke-width: 3.5; stroke-linecap: round; }
+.fl-lab { position: absolute; font-family: var(--font-code); font-weight: 500; font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; }
+.fl-lab.soft { color: var(--muted); }
+.fl-fact { position: absolute; background: var(--panel); border: 1px solid var(--rule-2); border-radius: 8px; padding: 16px 20px; box-shadow: 0 1px 2px rgba(15,31,51,.06); }
+.fl-fact .fl-t { font-family: var(--font-display); font-size: 27px; line-height: 1.1; color: var(--ink); white-space: nowrap; }
+.fl-fact .fl-d { margin-top: 6px; font-size: 17px; color: var(--muted); white-space: nowrap; }
+.fl-check { position: absolute; right: -14px; top: -14px; width: 36px; height: 36px; border-radius: 50%; background: var(--amber); color: var(--amber-ink); display: grid; place-items: center; font-size: 20px; font-weight: 700; border: 3px solid var(--stage); opacity: 0; }
+.fl-pill { position: absolute; height: 60px; border-radius: 30px; background: var(--teal-tint); border: 2px solid var(--teal); text-align: center; padding-top: 7px; opacity: 0; }
+.fl-pill .fl-t { font-weight: 700; font-size: 19px; line-height: 1.2; color: var(--teal-d); }
+.fl-pill .fl-d { font-size: 15.5px; line-height: 1.25; color: var(--ink-soft); white-space: nowrap; }
+.fl-tag { position: absolute; width: 640px; display: flex; flex-direction: column; gap: 4px; padding: 12px 0 0 18px; border-left: 6px solid var(--c); opacity: 0; }
+.fl-tag.amber { --c: var(--amber); --cd: var(--amber-d); } .fl-tag.teal { --c: var(--teal); --cd: var(--teal-d); }
+.fl-tag b { font-family: var(--font-code); font-weight: 500; font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--cd); }
+.fl-tag span { font-family: var(--font-voice); font-style: italic; font-size: 26px; line-height: 1.2; color: var(--ink); padding-bottom: 10px; }
